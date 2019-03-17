@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?define UpgradeGuid="3dbe84a7-ce9a-45fa-ae07-053f3dc98fd4" ?>
+  <?define Version="1.0.0"?>
+  
+	<Product Id="b5347a09-7ab2-4823-92d9-61f1752a1843" Name="AD Auth Server" Language="1033" Version="$(var.Version)" Manufacturer="SchulIT" UpgradeCode="$(var.UpgradeGuid)">
+		
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <Media Id="1" Cabinet="data.cab" EmbedCab="yes" />
+
+    <!-- Icon for Programs & Features -->
+    <Icon Id="icon.ico" SourceFile="icon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    
+    <!-- APPLICATION DIRECTORY -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="APPLICATIONFOLDER" Name="SchulIT">
+          <Directory Id="INSTALLLOCATION" Name="AD Auth Server">
+            <Component Id="CommonComponent" Guid="f71ee605-d616-4fdd-befb-a2bd005d5304" Win64="yes">
+              <File Name="Newtonsoft.Json.dll" Source="$(var.ServerService.TargetDir)" />
+              <File Name="ServerCore.dll" Source="$(var.ServerService.TargetDir)" />
+              <File Name="LICENSES.txt" Source="$(var.ServerService.TargetDir)" />
+            </Component>
+
+            <!-- PERFORMANCE COUNTERS -->
+            <Component Id="PerformanceCounters" Guid="009c43e7-b01d-4430-a64d-4b1e01f07dd3" Win64="yes" KeyPath="yes">
+              <util:PerformanceCategory Name="AD Auth Server" Id="PerformanceCounterCategory" MultiInstance="no" DefaultLanguage="english"
+                                        Help="Displays information of the AD Auth Server">
+                <util:PerformanceCounter Name="Dead connections" Type="numberOfItems64" Help="Number of dead connections" />
+                <util:PerformanceCounter Name="Open connections" Type="numberOfItems64" Help="Number of open connections (this includes dead connections)"/>
+              </util:PerformanceCategory>
+            </Component>
+              
+            <Component Id="ServiceComponent" Guid="cc15061e-ea82-47e2-9cf7-365313199715" Win64="yes">
+              <File Id="ServerService.exe" Name="ServerService.exe" Source="$(var.ServerService.TargetDir)" />
+            
+              <ServiceInstall Id="ServiceInstaller" Type="ownProcess" Name="AD Auth Server" DisplayName="AD Auth Server" Description="Starts AD Auth Server" Start="auto" Account="[SERVICEACCOUNT]" Password="[SERVICEPASSWORD]" ErrorControl="normal"/>
+              <ServiceControl Id="StartService" Stop="both" Remove="uninstall" Name="AD Auth Service" Wait="yes" />
+            </Component>
+
+            <Component Id="ConsoleComponent" Guid="24f22bc6-a642-4115-8a7a-73f33d815032" Win64="yes">
+              <File Id="ServerConsole.exe" Name="ServerConsole.exe" Source="$(var.ServerConsole.TargetDir)" />
+            </Component>
+
+            <Component Id="GUIComponent" Guid="18c309f9-885b-43b0-9f67-4760d89df3d2" Win64="yes">
+              <File Id="ServerGUI.exe" Name="ServerGUI.exe" Source="$(var.ServerGUI.TargetDir)" />
+              <File Id="ApplicationIcon" Name="icon.ico" Source="$(var.ServerGUI.TargetDir)icon.ico" />
+
+              <File Name="GalaSoft.MvvmLight.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="GalaSoft.MvvmLight.Extras.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="GalaSoft.MvvmLight.Platform.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="CommonServiceLocator.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="Microsoft.WindowsAPICodePack.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="Microsoft.WindowsAPICodePack.Shell.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="System.Windows.Interactivity.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="Xceed.Wpf.Toolkit.dll" Source="$(var.ServerGUI.TargetDir)" />
+              <File Name="GUI_LICENSES.txt" Source="$(var.ServerGUI.TargetDir)" />
+            
+              <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{16AB8EBE-598A-4ADE-8B63-FE2A42835500}" Type="string" Value="AD Auth Server GUI" />
+              <RegistryKey Root="HKCR" Key="CLSID\{16AB8EBE-598A-4ADE-8B63-FE2A42835500}" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
+                <RegistryValue Type="string" Value="AD Auth Server GUI" />
+                <RegistryValue Name="System.ControlPanel.Category" Type="string" Value="0,3" />
+                <RegistryValue Name="System.ApplicationName" Type="string" Value="ADAuthServer.ServerGUI" />
+                <RegistryValue Key="DefaultIcon" Type="string" Value="$(var.ServerGUI.TargetDir)/ServerGUI.exe" />
+                <RegistryValue Key="Shell\Open\Command" Type="string" Value="$(var.ServerGUI.TargetDir)/ServerGUI.exe" />
+              </RegistryKey>
+            </Component>
+
+            <Directory Id="GermanLanguageDir" Name="de">
+              <Component Id="GermanLanguage" Guid="3d15c9df-6cf0-4f24-89c5-f30e4b0daaee" Win64="yes">
+                <File Name="Xceed.Wpf.AvalonDock.resources.dll" Source="$(var.ServerGUI.TargetDir)de/Xceed.Wpf.AvalonDock.resources.dll" />
+                <File Name="ServerGUI.resources.dll" Source="$(var.ServerGUI.TargetDir)de/ServerGUI.resources.dll" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+      
+      <!-- PROGRAM DATA -->
+      <Directory Id="CommonAppDataFolder">
+        <Directory Id="MyAppDataCompanyDir" Name="SchulIT">
+          <Directory Id="MyAppDataDir" Name="AD Auth Server">
+            <Component Id="SettingsDirectoryComponent" Guid="c8ec1ecf-136a-40ae-b1eb-b462662393aa" Permanent="yes" NeverOverwrite="yes">
+              <File Name="settings.json" Source="$(var.ServerCore.ProjectDir)" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <!-- STARTMENU -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="MyShortCutsDir" Name="AD Auth Server">
+          <Component Id="GUIShortCutComponent" Guid="6902c317-1d41-482a-914e-3eec40b04a01">
+            <Shortcut Id="GUIShortCut" Name="AD Auth Server GUI" Target="[INSTALLLOCATION]ServerGUI.exe" />
+            <RemoveFolder Id="RemoveGUIShortCut" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\SchulIT\AD Auth Server\GUI" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+          </Component>
+
+          <Component Id="ConsoleShortCutComponent" Guid="3cc2932e-d1f0-424f-aae4-c21c623a4959">
+            <Shortcut Id="ConsoleShortCut" Name="AD Auth Server Console" Target="[INSTALLLOCATION]ServerConsole.exe" />
+            <RemoveFolder Id="RemoveConsoleShortCut" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\SchulIT\AD Auth Server\Console" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+          </Component>
+        </Directory>
+      </Directory>
+
+      <!-- DESKTOP -->
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Component Id="GUIDesktopIcon" Guid="8dfce47d-fb00-42be-974f-17446df55073">
+          <Shortcut Id="GUIDesktopIcon" Name="AD Auth Server GUI" Directory="DesktopFolder" WorkingDirectory="INSTALLLOCATION" Target="[INSTALLLOCATION]ServerGUI.exe" />
+          <RemoveFolder Id="RemoveDesktopIcon" On="uninstall"/>
+          <RegistryValue Root="HKCU" Key="Software\SchulIT\AD Auth Server\GUI" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        </Component>
+      </Directory>
+    </Directory>
+
+    <Feature Id="CommonFeature" Title="!(loc.FeatureCommonLibraries)" Level="1" Absent="disallow">
+      <ComponentRef Id="CommonComponent" />
+      <ComponentRef Id="SettingsDirectoryComponent" /> 
+    </Feature>
+      
+    <Feature Id="ServiceFeature" Title="!(loc.FeatureService)" Level="1">
+      <ComponentRef Id="ServiceComponent"/>
+
+      <Feature Id="PerformanceCountersFeature" Title="!(loc.FeaturePerformanceCounters)" Level="1" Absent="disallow">
+        <ComponentRef Id="PerformanceCounters"/>
+      </Feature>
+    </Feature>
+
+    <Feature Id="ConsoleFeature" Title="!(loc.FeatureConsole)" Level="1" Absent="disallow">
+      <ComponentRef Id="ConsoleComponent"/>
+
+      <Feature Id="ConsoleShortcutFeature" Title="!(loc.FeatureShortcut)" Level="1">
+        <ComponentRef Id="ConsoleShortCutComponent"/>
+      </Feature>
+    </Feature>
+
+    <Feature Id="GUIFeature" Title="!(loc.FeatureGUI)" Level="1">
+      <ComponentRef Id="GUIComponent" />
+
+      <Feature Id="ShortcutFeature" Title="!(loc.FeatureShortcut)" Level="1">
+        <ComponentRef Id="GUIShortCutComponent" />
+      </Feature>
+
+      <Feature Id="DesktopIconFeature" Title="!(loc.FeatureDesktopIcon)" Level="1">
+        <ComponentRef Id="GUIDesktopIcon" />
+      </Feature>
+
+      <Feature Id="LanguageFeature" Title="!(loc.FeatureTranslations)" Level="1">
+        <ComponentRef Id="GermanLanguage" />
+      </Feature>
+    </Feature>
+
+    <!-- PREVENT DOWNGRADING -->
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeImpossible)" />
+
+    <UIRef Id="WixUI_Advanced" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Property Id="ApplicationFolderName" Value="SchulIT" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+    <WixVariable Id="WixUILicenseRtf" Value="Eula.rtf" />
+
+    <SetDirectory Id="APPLICATIONFOLDER" Value="[ProgramFiles64Folder][ApplicationFolderName]">APPLICATIONFOLDER=""</SetDirectory>
+    
+	</Product>
+
+	
+</Wix>

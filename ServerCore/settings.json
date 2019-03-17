@@ -1,0 +1,21 @@
+﻿{
+  "server": {
+    "port": 55117,
+    "ipv6": false
+  },
+
+  "tls": {
+    "enabled":  false,
+    "cert": "C:/ProgramData/SchulIT/AD Auth Server/server.pfx",
+    "psk": ""
+  },
+
+  "ldap": {
+    "dc": "DC01",
+    "domain": "schulit.lokal",
+    "username": "",
+    "password":  ""
+  },
+
+  "unique_id": null
+}

@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CheckStatus" xml:space="preserve">
+    <value>Status prüfen</value>
+  </data>
+  <data name="CurrentStatus" xml:space="preserve">
+    <value>Aktueller Status</value>
+  </data>
+  <data name="PleaseWait" xml:space="preserve">
+    <value>Bitte warten...</value>
+  </data>
+  <data name="ServerRunning" xml:space="preserve">
+    <value>Server läuft?</value>
+  </data>
+  <data name="ServiceInstalled" xml:space="preserve">
+    <value>Dienst installiert?</value>
+  </data>
+  <data name="ServiceRunning" xml:space="preserve">
+    <value>Dienst läuft?</value>
+  </data>
+  <data name="StartService" xml:space="preserve">
+    <value>Dienst starten</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="StopService" xml:space="preserve">
+    <value>Dienst stoppen</value>
+  </data>
+  <data name="Certificate" xml:space="preserve">
+    <value>Zertifikat</value>
+  </data>
+  <data name="CertificateInfo" xml:space="preserve">
+    <value>Zertifikat-Informationen</value>
+  </data>
+  <data name="Choose" xml:space="preserve">
+    <value>auswählen</value>
+  </data>
+  <data name="Client" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="DCHostname" xml:space="preserve">
+    <value>DC Hostname</value>
+  </data>
+  <data name="Domain" xml:space="preserve">
+    <value>Domäne</value>
+  </data>
+  <data name="HasPrivateKey" xml:space="preserve">
+    <value>Privater Schlüssel</value>
+  </data>
+  <data name="Hostname" xml:space="preserve">
+    <value>Hostname</value>
+  </data>
+  <data name="IPv6" xml:space="preserve">
+    <value>IPv6 aktiv</value>
+  </data>
+  <data name="Issuer" xml:space="preserve">
+    <value>Aussteller</value>
+  </data>
+  <data name="NotAfter" xml:space="preserve">
+    <value>gültig bis</value>
+  </data>
+  <data name="NotBefore" xml:space="preserve">
+    <value>gültig ab</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Request" xml:space="preserve">
+    <value>Anfrage</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="Response" xml:space="preserve">
+    <value>Antwort</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Sicherheit (SSL/TLS)</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Server" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Ausgestellt für</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Testen</value>
+  </data>
+  <data name="Thumbprint" xml:space="preserve">
+    <value>Fingerabdruck</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="UseTls" xml:space="preserve">
+    <value>TLS nutzen</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="UniqueIdAttributeName" xml:space="preserve">
+    <value>Eindeutige ID</value>
+  </data>
+  <data name="UniqueIdAttributeNameHelp" xml:space="preserve">
+    <value>Name des Attributs, in dem eine eindeutige ID des Benutzers gespeichert ist (i.d.R. kommt die aus der Schulverwaltung).</value>
+  </data>
+  <data name="Licenses" xml:space="preserve">
+    <value>Drittanbieterlizenzen</value>
+  </data>
+</root>

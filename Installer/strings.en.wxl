@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="DowngradeImpossible">Downgrading is not possible. Please uninstall the current version of the application and try to install then.</String>
+  <String Id="FeatureCommonLibraries">Common libraries</String>
+  <String Id="FeatureService">Service</String>
+  <String Id="FeatureConsole">Console</String>
+  <String Id="FeatureGUI">GUI</String>
+  <String Id="FeatureTranslations">German translation</String>
+  <String Id="FeatureShortcut">Start menu shortcut</String>
+  <String Id="FeatureDesktopIcon">Desktop shortcut</String>
+  <String Id="FeaturePerformanceCounters">Windows Performance Counters</String>
+</WixLocalization>
