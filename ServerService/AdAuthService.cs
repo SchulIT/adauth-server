@@ -20,7 +20,7 @@ namespace ServerService
 
             var logger = new EventLogger();
             var settings = JsonSettings.LoadSettings();
-            var handler = new JsonRequestHandler(new ActiveDirectoryAuthenticationService(settings), settings);
+            var handler = new JsonRequestHandler(new ActiveDirectoryAuthenticationService(settings, logger), settings);
             INetworkTransport transport = new UnencryptedTransport();
 
             if (settings.Tls != null && settings.Tls.IsEnabled)
