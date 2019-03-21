@@ -15,7 +15,7 @@ namespace ServerConsole
         {
             var logger = new ConsoleLogger();
             var settings = JsonSettings.LoadSettings();
-            var handler = new JsonRequestHandler(new ActiveDirectoryAuthenticationService(settings), settings);
+            var handler = new JsonRequestHandler(new ActiveDirectoryAuthenticationService(settings, logger), settings);
             
             INetworkTransport transport = new UnencryptedTransport();
 

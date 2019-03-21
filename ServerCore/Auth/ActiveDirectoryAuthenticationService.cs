@@ -1,6 +1,8 @@
 ﻿using CPI.DirectoryServices;
+using ServerCore.Log;
 using ServerCore.Response;
 using ServerCore.Settings;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
@@ -14,56 +16,70 @@ namespace ServerCore.Auth
     public class ActiveDirectoryAuthenticationService : IAuthenticationService
     {
         private ISettings settings;
+        private ILogger logger;
 
-        public ActiveDirectoryAuthenticationService(ISettings settings)
+        public ActiveDirectoryAuthenticationService(ISettings settings, ILogger logger)
         {
             this.settings = settings;
+            this.logger = logger;
         }
 
         public AuthResponse Login(string username, string password)
         {
             var container = "DC=" + settings.Ldap.Domain.Replace(".", ",DC=");
 
-            using (var principal = new PrincipalContext(ContextType.Domain, settings.Ldap.DC, container, settings.Ldap.Username, settings.Ldap.Password))
+            try
             {
-                var response = new AuthResponse();
-
-                var loginSuccessful = false;
-
-                try
+                using (var principal = new PrincipalContext(ContextType.Domain, settings.Ldap.DC, container, settings.Ldap.Username, settings.Ldap.Password))
                 {
-                    loginSuccessful = principal.ValidateCredentials(username, password);
-                }
-                catch { }
+                    var response = new AuthResponse();
 
-                if (!loginSuccessful)
-                {
-                    response.Success = false;
+                    var loginSuccessful = false;
+
+                    try
+                    {
+                        loginSuccessful = principal.ValidateCredentials(username, password);
+                    }
+                    catch { }
+
+                    if (!loginSuccessful)
+                    {
+                        response.Success = false;
+                        return response;
+                    }
+
+                    var findUser = new UserPrincipal(principal);
+                    findUser.SamAccountName = username;
+
+                    using (var searcher = new PrincipalSearcher(findUser))
+                    {
+                        var user = searcher.FindOne() as UserPrincipal;
+
+                        if (user != null)
+                        {
+                            response.Success = true;
+                            response.Username = user.SamAccountName;
+                            response.Firstname = user.GivenName;
+                            response.Lastname = user.Surname;
+                            response.DispalyName = user.DisplayName;
+                            response.UniqueId = GetValue(user, settings.UniqueIdAttributeName);
+                            response.OU = GetOU(user);
+                            response.Groups = GetGroups(user);
+                        }
+                    }
+
                     return response;
                 }
-
-                var findUser = new UserPrincipal(principal);
-                findUser.SamAccountName = username;
-
-                using (var searcher = new PrincipalSearcher(findUser))
-                {
-                    var user = searcher.FindOne() as UserPrincipal;
-
-                    if (user != null)
-                    {
-                        response.Success = true;
-                        response.Username = user.SamAccountName;
-                        response.Firstname = user.GivenName;
-                        response.Lastname = user.Surname;
-                        response.DispalyName = user.DisplayName;
-                        response.UniqueId = GetValue(user, settings.UniqueIdAttributeName);
-                        response.OU = GetOU(user);
-                        response.Groups = GetGroups(user);
-                    }
-                }
-
-                return response;
             }
+            catch (Exception e)
+            {
+                logger.WriteException(e);
+            }
+
+            return new AuthResponse
+            {
+                Success = false
+            };
         }
 
         private string GetValue(UserPrincipal principal, string propertyName)
