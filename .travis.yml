@@ -1,0 +1,12 @@
+os: windows
+before_install:
+  - choco install nuget.commandline
+  - choco install wixtoolset 
+  - nuget restore
+
+build:
+  - msbuild ADAuthServer.sln /p:Configuration=Release;Platform=x64
+
+build_msi:
+  - cd Installer
+  - msbuild.exe Installer.wixproj /p:Configuration=Release
