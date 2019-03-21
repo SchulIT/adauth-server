@@ -72,9 +72,6 @@ namespace ServerCore.Network
             catch (Exception e)
             {
                 logger.WriteException(e);
-            }
-            finally
-            {
                 sslStream.Close();
                 connection.Close();
                 logger.WriteDebug("Socket: connection closed");
