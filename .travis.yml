@@ -1,12 +1,22 @@
 os: windows
+language: csharp
+
 before_install:
   - choco install nuget.commandline
   - choco install wixtoolset 
   - nuget restore
 
-build:
+script:
   - msbuild ADAuthServer.sln /p:Configuration=Release;Platform=x64
-
-build_msi:
   - cd Installer
   - msbuild.exe Installer.wixproj /p:Configuration=Release
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "cfqz0CbGml4ioeeDPXnpsYl/55SSOIgop+8Grn/hZ4fJhQv7tCpgGMateFYgo970Lldcstrbfwypgv8M0KwZXauU8VLVxeRePt22fOKxoD91BXatuh23zeWTYOwKKjY+MPswQOTZwiV97+pNun+QiiH8IYwll6wk8bBUbGpS3LYdBfIz+q73zHB9iLBbzd0GjEN7UxrVQwkqE/oSZZm2OP6N9UKBUmfNIXJDBfLQV9hRbVszPfJqXkuTcYjPZ9essc6NmLlDkrFhFXn6tojXwo34ONkNKayYIJfK5OY07k36uFV0Iu06ZWVtMpxuemmKb2f+dtOOuHUUAcDoQCTSVzr+e4IKgSMnGpYiuFPVC3XG2YhhAKBeDz9ANCWWd4A89bPPkuaPivj6Zrt99aw0Ckv3xFrDUtXJvP0+chhdKLCpCM6VA+EZvtuoWi4tfJVGtlDbJ5ID8X9qZrTsaPB7ZzCm+OD7d2uRB0+1430xN42Om0ip2UZbNEtDn072HMbo+iATlX6jorQpiFPm/nO4iUdK8v3PaB1YAgqEn72HQdot8OglevmDB89COjRX9V2fKIwfMVVxLWOXBzUnk6TU8NB5WBPI0sDl1gRhF4z3lLjHsNCjk3NJKlDcuvwLhheJCSDfRxcnasLkv9IlIwFCmFCK/i7c/58OAdWE9IZ6usI="
+  file: "bin/Release/de-de/Installer.msi"
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
