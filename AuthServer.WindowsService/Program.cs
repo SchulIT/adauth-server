@@ -45,6 +45,7 @@ namespace AuthServer.WindowsService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
-                });
+                })
+                .UseWindowsService();
     }
 }

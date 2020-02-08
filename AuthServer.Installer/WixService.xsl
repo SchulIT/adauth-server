@@ -21,7 +21,7 @@
 
   <!-- XSL Template to inject WiX service installation elements to a .wxs generated from Heat Project task -->
   <!-- There may be other ways to look for your file -->
-  <xsl:template match='wix:Wix/wix:Fragment/wix:DirectoryRef/wix:Component[wix:File[@Source="SourceDir\AuthServer.WindowsService.exe"]]'>
+  <xsl:template match='wix:Wix/wix:Fragment/wix:DirectoryRef/wix:Component[wix:File[@Source="$(var.AuthServer.WindowsService.TargetDir)..\..\..\Release\netcoreapp3.1\win-x64\publish\AuthServer.WindowsService.exe"]]'>
     <xsl:element name="wix:Component">      
       <xsl:attribute name="Id">
         <xsl:value-of select="@Id"/>

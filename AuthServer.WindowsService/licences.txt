@@ -20,6 +20,13 @@ licenseUrl:https://licenses.nuget.org/Apache-2.0
 license Type:Apache-2.0
 
 ####################################################################################################
+Package:Microsoft.Extensions.Hosting.WindowsServices
+project URL:https://asp.net/
+Description:.NET hosting infrastructure for Windows Services.
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
 Package:NLog
 project URL:https://nlog-project.org/
 Description:NLog is a logging platform for .NET with rich log routing and management capabilities.
