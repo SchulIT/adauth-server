@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>dotnet-AuthServer.WindowsService-41EE207F-5DD4-40B4-BD68-6AB9CF914783</UserSecretsId>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <PackageProjectUrl>https://github.com/schulit/adauth-server</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Authors>Marcel Marnitz</Authors>
+    <Company>SchulIT</Company>
+    <Product>Active Directory Authentication Server Windows Service</Product>
+    <Copyright>© 2020 SchulIT</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="nlog.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.1" />
+    <PackageReference Include="NLog" Version="4.6.8" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuthServer.Core\AuthServer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="licences.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet-project-licenses -i . -u -o" />
+  </Target>
+</Project>

@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x64</Platforms>
+    <Version>2.0.0</Version>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Authors>Marcel Marnitz</Authors>
+    <Company>SchulIT</Company>
+    <Product>Active Directory Authentication Server Console-Runner</Product>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageProjectUrl>https://github.com/schulit/adauth-server</PackageProjectUrl>
+    <Copyright>© 2020 SchulIT</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.0.0" />
+    <PackageReference Include="NLog" Version="4.6.8" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuthServer.Core\AuthServer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="licences.txt">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet-project-licenses -i . -u -o" />
+  </Target>
+
+</Project>

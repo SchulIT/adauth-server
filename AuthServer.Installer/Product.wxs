@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define UpgradeGuid="CC3D2E3E-7B27-4ABE-A1EF-0E362E634756" ?>
+  <?define Version="2.0.0"?>
+
+  <Product Id="*" Name="Active Directory Authentication Server" Language="1033" Version="$(var.Version)" Manufacturer="SchulIT" UpgradeCode="$(var.UpgradeGuid)">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+    <Media Id="1" Cabinet="data.cab" EmbedCab="yes" />
+
+    <!-- Icon for Programs & Features -->
+    <Icon Id="icon.ico" SourceFile="icon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+    <!-- APPLICATION DIRECTORY -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="VENDORFOLDER" Name="SchulIT">
+          <Directory Id="APPLICATIONFOLDER" Name="Active Directory Authentication Server">
+            <Directory Id="CONSOLE_INSTALLLOCATION" Name="Console" />
+            <Directory Id="SERVICE_INSTALLLOCATION" Name="Service" />
+            <Directory Id="GUI_INSTALLLOCATION" Name="GUI" />
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <!-- STARTMENU -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="MyShortCutsDir" Name="SchulIT">
+          <Component Id="ShortCutComponent" Guid="C8221381-EA35-4F1F-AF58-EE338240FCA2">
+            <Shortcut Id="ShortCut" Name="Active Directory Authentication Server Configuration Utility" Target="[GUI_INSTALLLOCATION]\AuthServer.GUI.exe" Icon="icon.ico" />
+            <RemoveFolder Id="RemoveShortCut" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\SchulIT\ADAuthServer\GUI" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="MainFeature" Title="Active Directory Authentication Server" Level="1">
+      <ComponentGroupRef Id="ConsoleSourceComponentGroup" />
+      <ComponentGroupRef Id="GuiSourceComponentGroup" />
+      <ComponentGroupRef Id="ServiceSourceComponentGroup" />
+
+      <Feature Id="ShortcutFeature" Title="!(loc.StartmenuShortcut)" Level="1">
+        <ComponentRef Id="ShortCutComponent"/>
+      </Feature>
+    </Feature>
+
+    <!-- PREVENT DOWNGRADING -->
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeImpossible)" />
+
+    <UIRef Id="WixUI_Advanced" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <Property Id="VendorFolderName" Value="SchulIT" />
+    <Property Id="ApplicationFolderName" Value="Active Directory Authentication Server" />
+    <Property Id="WixAppFolder" Value="WixPerMachineFolder" />
+    <WixVariable Id="WixUISupportPerUser" Value="0" />
+    <WixVariable Id="WixUILicenseRtf" Value="Eula.rtf" />
+    
+    <SetDirectory Id="APPLICATIONFOLDER" Value="[ProgramFiles64Folder][VendorFolderName]\[ApplicationFolderName]">APPLICATIONFOLDER=""</SetDirectory>
+	</Product>
+</Wix>

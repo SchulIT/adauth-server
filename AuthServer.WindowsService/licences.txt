@@ -1,0 +1,51 @@
+####################################################################################################
+Package:Autofac
+project URL:https://autofac.org/
+Description:Autofac is an IoC container for Microsoft .NET. It manages the dependencies between classes so that applications stay easy to change as they grow in size and complexity.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Autofac.Extensions.DependencyInjection
+project URL:https://autofac.org/
+Description:Autofac implementation of the interfaces in Microsoft.Extensions.DependencyInjection.Abstractions, the .NET Framework dependency injection abstraction.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Microsoft.Extensions.Hosting
+project URL:https://asp.net/
+Description:.NET Core hosting and startup infrastructures for applications.
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
+
+####################################################################################################
+Package:NLog
+project URL:https://nlog-project.org/
+Description:NLog is a logging platform for .NET with rich log routing and management capabilities.
+NLog supports traditional logging, structured logging and the combination of both.
+
+Supported platforms:
+
+- .NET Framework 3.5, 4, 4.5, 4.6, 4.7 & 4.8
+- .NET Standard 1.3+ and 2.0+;
+- .NET Framework 4 client profile
+- Xamarin Android, Xamarin iOs
+- UWP
+- Windows Phone 8
+- Silverlight 4 and 5
+- Mono 4
+
+For ASP.NET Core, check: https://www.nuget.org/packages/NLog.Web.AspNetCore
+licenseUrl:https://github.com/NLog/NLog/blob/master/LICENSE.txt
+license Type:
+
+####################################################################################################
+Package:NLog.Extensions.Logging
+project URL:https://github.com/NLog/NLog.Extensions.Logging
+Description:NLog LoggerProvider for Microsoft.Extensions.Logging for logging in .NET Standard libraries and .NET Core applications.
+
+For ASP.NET Core, use NLog.Web.AspNetCore: https://www.nuget.org/packages/NLog.Web.AspNetCore
+licenseUrl:https://github.com/NLog/NLog.Extensions.Logging/blob/master/LICENSE
+license Type:
+
