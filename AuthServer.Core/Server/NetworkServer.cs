@@ -137,17 +137,20 @@ namespace AuthServer.Core.Server
 
         private void OnAcceptConnection(IAsyncResult ar)
         {
-            var listener = ar.AsyncState as Socket;
-            
-            if(!listener.IsBound)
+            try
             {
-                // Not connected anymore
-                return;
+                var listener = ar.AsyncState as Socket;
+                var connection = listener.EndAccept(ar);
+                transport.OnAcceptConnection(connection);
+                socketListener.BeginAccept(new AsyncCallback(OnAcceptConnection), socketListener);
             }
-
-            var connection = listener.EndAccept(ar);
-            transport.OnAcceptConnection(connection);
-            socketListener.BeginAccept(new AsyncCallback(OnAcceptConnection), socketListener);
+            catch (Exception)
+            {
+                /**
+                 * I know this is not good style, but somehow when calling Shutdown() on the <see cref="socketListener"/>, this
+                 * method is triggered and causes an ObjectDisposedException :-(
+                 */
+            }
         }
 
         private void OnConnectionOpened(ConnectionOpenedEventArgs args)
