@@ -159,6 +159,9 @@
   <data name="Issuer" xml:space="preserve">
     <value>Aussteller</value>
   </data>
+  <data name="LdapSslTlsThumbprintHelp" xml:space="preserve">
+    <value>Fingerabdruck eines der Zertifikate in der Zertifikatskette, die bei der Kommunikation mit dem LDAP Server verwendet wird.</value>
+  </data>
   <data name="Licenses" xml:space="preserve">
     <value>Drittanbieterlizenzen</value>
   </data>
@@ -240,8 +243,14 @@
   <data name="UniqueIdAttributeNameHelp" xml:space="preserve">
     <value>Attribut, das eine eindeutige ID des Benutzers enthät</value>
   </data>
+  <data name="UseLdaps" xml:space="preserve">
+    <value>SSL verwenden (LDAPS)</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Benutzername</value>
+  </data>
+  <data name="UseStartTls" xml:space="preserve">
+    <value>TLS verwenden (STARTTLS)</value>
   </data>
   <data name="UseTls" xml:space="preserve">
     <value>TLS benutzen</value>

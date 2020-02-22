@@ -157,10 +157,14 @@ namespace AuthServer.GUI.ViewModels
             var ldapSettings = (Settings.Ldap as MemorySettings.MemoryLdapSettings);
 
             ldapSettings.Server = storedSettings.Ldap.Server;
+            ldapSettings.Port = storedSettings.Ldap.Port;
+            ldapSettings.UseSSL = storedSettings.Ldap.UseSSL;
+            ldapSettings.UseTLS = storedSettings.Ldap.UseTLS;
             ldapSettings.DomainFQDN = storedSettings.Ldap.DomainFQDN;
             ldapSettings.DomainNetBIOS = storedSettings.Ldap.DomainNetBIOS;
             ldapSettings.Password = storedSettings.Ldap.Password;
             ldapSettings.Username = storedSettings.Ldap.Username;
+            ldapSettings.CertificateThumbprint = storedSettings.Ldap.CertificateThumbprint;
 
             var serverSettings = (Settings.Server as MemorySettings.MemoryServerSettings);
             serverSettings.IPv6 = storedSettings.Server.IPv6;
@@ -203,6 +207,10 @@ namespace AuthServer.GUI.ViewModels
 
                 public int Port { get; set; }
 
+                public bool UseSSL { get; set; }
+
+                public bool UseTLS { get; set; }
+
                 public string DomainFQDN { get; set; }
 
                 public string DomainNetBIOS { get; set; }
@@ -210,6 +218,8 @@ namespace AuthServer.GUI.ViewModels
                 public string Username { get; set; }
 
                 public string Password { get; set; }
+
+                public string CertificateThumbprint { get; set; }
             }
         }
     }

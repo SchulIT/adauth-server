@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
 using System.Collections.Generic;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace AuthServer.Core.Provider
@@ -46,7 +48,7 @@ namespace AuthServer.Core.Provider
             {
                 try
                 {
-                    ldapConnection.Connect(settings.Ldap.Server, settings.Ldap.Port);
+                    ConnectLdapConnection(ldapConnection);
                     ldapConnection.Bind(settings.Ldap.Username, settings.Ldap.Password);
 
                     var container = "DC=" + settings.Ldap.DomainFQDN.Replace(".", ",DC=");
@@ -110,6 +112,47 @@ namespace AuthServer.Core.Provider
             return null;
         }
 
+        private void ConnectLdapConnection(LdapConnection ldapConnection)
+        {
+            ldapConnection.UserDefinedServerCertValidationDelegate += CheckCertificateCallback;
+
+            /**
+             * CONFIGURE SSL
+             */
+            if (settings.Ldap.UseSSL)
+            {
+                logger.LogDebug("Starting SSL session.");
+                ldapConnection.SecureSocketLayer = true;
+            }
+
+            /**
+             * CONNECT
+             */
+            ldapConnection.Connect(settings.Ldap.Server, settings.Ldap.Port);
+
+            /**
+             * CONFIGURE TLS
+             */
+            if (settings.Ldap.UseTLS)
+            {
+                logger.LogDebug("Starting TLS session.");
+                ldapConnection.StartTls();
+            }
+        }
+
+        private bool CheckCertificateCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            foreach (var cert in chain.ChainElements)
+            {
+                if (cert.Certificate.Thumbprint.ToLower() == settings.Ldap.CertificateThumbprint.ToLower())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public User Authenticate(string username, string password)
         {
             var regexp = new Regex(UsernameRegexp);
@@ -125,8 +168,8 @@ namespace AuthServer.Core.Provider
             {
                 try
                 {
+                    ConnectLdapConnection(ldapConnection);
                     var usernameDn = settings.Ldap.DomainNetBIOS + @"\" + username;
-                    ldapConnection.Connect(settings.Ldap.Server, settings.Ldap.Port);
                     ldapConnection.Bind(usernameDn, password);
 
                     return GetInformation(username);

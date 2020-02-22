@@ -32,6 +32,10 @@ namespace AuthServer.GUI.Settings
 
             var ldapSettings = jsonSettings.Ldap as JsonLdapSettings;
             ldapSettings.Server = settings.Ldap.Server;
+            ldapSettings.Port = settings.Ldap.Port;
+            ldapSettings.UseSSL = settings.Ldap.UseSSL;
+            ldapSettings.UseTLS = settings.Ldap.UseTLS;
+            ldapSettings.CertificateThumbprint = settings.Ldap.CertificateThumbprint;
             ldapSettings.DomainFQDN = settings.Ldap.DomainFQDN;
             ldapSettings.DomainNetBIOS = settings.Ldap.DomainNetBIOS;
             ldapSettings.Username = settings.Ldap.Username;

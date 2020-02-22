@@ -73,6 +73,12 @@ namespace AuthServer.Core.Settings
         [JsonProperty("port")]
         public int Port { get; set; } = 389;
 
+        [JsonProperty("ssl")]
+        public bool UseSSL { get; set; } = false;
+
+        [JsonProperty("tls")]
+        public bool UseTLS { get; set; } = false;
+
         [JsonProperty("domain_netbios")]
         public string DomainNetBIOS { get; set; }
 
@@ -84,5 +90,8 @@ namespace AuthServer.Core.Settings
 
         [JsonProperty("password")]
         public string Password { get; set; }
+
+        [JsonProperty("certificate_thumbprint")]
+        public string CertificateThumbprint { get; set; }
     }
 }

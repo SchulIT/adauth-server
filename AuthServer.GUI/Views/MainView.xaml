@@ -323,6 +323,11 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <TextBlock Style="{StaticResource TabContentHeaderTextStyle}" Text="{x:Static l10n:Strings.Settings}" />
@@ -412,7 +417,38 @@
                                     <TextBlock Text="{x:Static l10n:Strings.Server}" />
                                     <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.Server, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                                 </Grid>
+
                                 <Grid Grid.Row="11">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{x:Static l10n:Strings.Port}" />
+                                    <xceed:IntegerUpDown Grid.Column="1" Value="{Binding Settings.Ldap.Port, UpdateSourceTrigger=PropertyChanged}"></xceed:IntegerUpDown>
+                                </Grid>
+
+                                <CheckBox Grid.Row="12" IsChecked="{Binding Settings.Ldap.UseSSL}" Content="{x:Static l10n:Strings.UseLdaps}" />
+
+                                <CheckBox Grid.Row="13" IsChecked="{Binding Settings.Ldap.UseTLS}" Content="{x:Static l10n:Strings.UseStartTls}" />
+
+                                <Grid Grid.Row="14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="{x:Static l10n:Strings.Thumbprint}" />
+                                    <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.CertificateThumbprint, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                                    <TextBlock Grid.Row="1" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{x:Static l10n:Strings.LdapSslTlsThumbprintHelp}" Style="{StaticResource HelpTextBlockStyle}" />
+                                </Grid>
+
+                                <Grid Grid.Row="15">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="*" />
@@ -421,7 +457,7 @@
                                     <TextBlock Text="{x:Static l10n:Strings.DomainFQDN}" />
                                     <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.DomainFQDN, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                                 </Grid>
-                                <Grid Grid.Row="12">
+                                <Grid Grid.Row="16">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="*" />
@@ -430,7 +466,7 @@
                                     <TextBlock Text="{x:Static l10n:Strings.DomainNetbios}" />
                                     <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.DomainNetBIOS, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                                 </Grid>
-                                <Grid Grid.Row="13">
+                                <Grid Grid.Row="17">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="*" />
@@ -439,7 +475,7 @@
                                     <TextBlock Text="{x:Static l10n:Strings.Username}" />
                                     <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.Username, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                                 </Grid>
-                                <Grid Grid.Row="14">
+                                <Grid Grid.Row="18">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100" />
                                         <ColumnDefinition Width="*" />
@@ -448,7 +484,7 @@
                                     <TextBlock Text="{x:Static l10n:Strings.Password}" />
                                     <TextBox Grid.Column="1" Text="{Binding Settings.Ldap.Password, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
-                                <Grid Grid.Row="15">
+                                <Grid Grid.Row="19">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="120" />
                                         <ColumnDefinition Width="*" />
@@ -462,7 +498,7 @@
                                     <TextBox Grid.Column="1" Text="{Binding Settings.UniqueIdAttributeName, UpdateSourceTrigger=PropertyChanged}" />
 
                                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{x:Static l10n:Strings.UniqueIdAttributeNameHelp}"
-                                               TextWrapping="Wrap"/>
+                                               Style="{StaticResource HelpTextBlockStyle}" TextWrapping="Wrap"/>
                                 </Grid>
                             </Grid>
                         </ScrollViewer>

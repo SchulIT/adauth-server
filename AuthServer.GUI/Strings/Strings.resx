@@ -159,6 +159,9 @@
   <data name="Issuer" xml:space="preserve">
     <value>Issuer</value>
   </data>
+  <data name="LdapSslTlsThumbprintHelp" xml:space="preserve">
+    <value>Fingerprint of a certificate which is in the certificate chain used when communicating the the LDAP server.</value>
+  </data>
   <data name="Licenses" xml:space="preserve">
     <value>3rd party licenses</value>
   </data>
@@ -243,8 +246,14 @@
   <data name="UniqueIdAttributeNameHelp" xml:space="preserve">
     <value>Attribute which holds an unique ID</value>
   </data>
+  <data name="UseLdaps" xml:space="preserve">
+    <value>Use SSL (LDAPS)</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
+  </data>
+  <data name="UseStartTls" xml:space="preserve">
+    <value>Use TLS (STARTTLS)</value>
   </data>
   <data name="UseTls" xml:space="preserve">
     <value>Use TLS</value>

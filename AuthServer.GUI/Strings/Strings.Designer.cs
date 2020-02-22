@@ -187,6 +187,15 @@ namespace AuthServer.GUI.Strings {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Fingerprint of a certificate which is in the certificate chain used when communicating the the LDAP server. ähnelt.
+        /// </summary>
+        public static string LdapSslTlsThumbprintHelp {
+            get {
+                return ResourceManager.GetString("LdapSslTlsThumbprintHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die 3rd party licenses ähnelt.
         /// </summary>
         public static string Licenses {
@@ -439,11 +448,29 @@ namespace AuthServer.GUI.Strings {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Use SSL (LDAPS) ähnelt.
+        /// </summary>
+        public static string UseLdaps {
+            get {
+                return ResourceManager.GetString("UseLdaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Username ähnelt.
         /// </summary>
         public static string Username {
             get {
                 return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Use TLS (STARTTLS) ähnelt.
+        /// </summary>
+        public static string UseStartTls {
+            get {
+                return ResourceManager.GetString("UseStartTls", resourceCulture);
             }
         }
         

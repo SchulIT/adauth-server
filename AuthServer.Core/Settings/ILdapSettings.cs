@@ -16,6 +16,16 @@
         int Port { get; }
 
         /// <summary>
+        /// Flag whether to use SSL (note: you also need to specify the certificate fingerpint!)
+        /// </summary>
+        bool UseSSL { get; }
+
+        /// <summary>
+        /// Flag whether to use TLS (note: you also need to specify the certificate fingerpint!)
+        /// </summary>
+        bool UseTLS { get; }
+
+        /// <summary>
         /// The name of the domain including 
         /// </summary>
         string DomainFQDN { get; }
@@ -34,5 +44,11 @@
         /// The password of a read-only ldap user
         /// </summary>
         string Password { get; }
+
+        /// <summary>
+        /// Thumbprint of a certificate which is included in the certificate
+        /// chain used by the Domain Controller.
+        /// </summary>
+        string CertificateThumbprint { get; }
     }
 }
