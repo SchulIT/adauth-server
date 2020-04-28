@@ -33,9 +33,11 @@ namespace AuthServer.Core.Handler
             {
                 Success = true,
                 Username = user.Username,
+                UPN = user.UPN,
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 DisplayName = user.DisplayName,
+                Guid = user.Guid,
                 UniqueId = user.UniqueId,
                 OU = user.OU,
                 Email = user.Email,

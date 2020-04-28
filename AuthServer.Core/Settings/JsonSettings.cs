@@ -93,5 +93,11 @@ namespace AuthServer.Core.Settings
 
         [JsonProperty("certificate_thumbprint")]
         public string CertificateThumbprint { get; set; }
+
+        [JsonProperty("username_property")]
+        public UsernameProperty UsernameProperty { get; set; } = UsernameProperty.UserPrincipalName;
+
+        [JsonProperty("allowed_upn_suffixes")]
+        public string[] AllowedUpnSuffixes { get; set; }
     }
 }

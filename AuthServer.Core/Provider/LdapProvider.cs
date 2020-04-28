@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Novell.Directory.Ldap;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
@@ -19,9 +20,11 @@ namespace AuthServer.Core.Provider
         private const string LastnameAttribute = "sn";
         private const string UsernameAttribute = "sAMAccountName";
         private const string AccountControlAttribute = "UserAccountControl";
+        private const string GuidAttribute = "objectGUID";
+        private const string UserPrincipalNameAttribute = "userPrincipalName";
         private const int IsActiveAttributeValue = 0x2;
 
-        private const string UsernameRegexp = @"([A-Za-z0-9_\-\.])*";
+        private const string UsernameRegexp = @"([A-Za-z0-9_\-\.@])*";
         private const string SearchFilter = "({key}={username})";
 
         private ISettings settings;
@@ -44,6 +47,17 @@ namespace AuthServer.Core.Provider
                 return null;
             }
 
+            if(settings.Ldap.UsernameProperty == UsernameProperty.UserPrincipalName && settings.Ldap.AllowedUpnSuffixes != null && settings.Ldap.AllowedUpnSuffixes.Length > 0)
+            {
+                var suffix = username.Substring(username.IndexOf('@') + 1);
+
+                if(!settings.Ldap.AllowedUpnSuffixes.Contains(suffix))
+                {
+                    logger.LogError($"UPN-Suffix {suffix} is not allowed.");
+                    return null;
+                }
+            }
+
             using (var ldapConnection = new LdapConnection())
             {
                 try
@@ -52,14 +66,15 @@ namespace AuthServer.Core.Provider
                     ldapConnection.Bind(settings.Ldap.Username, settings.Ldap.Password);
 
                     var container = "DC=" + settings.Ldap.DomainFQDN.Replace(".", ",DC=");
-                    var attributes = new List<string>() { MemberOfAttribute, EmailAttribute, DisplayNameAttribute, FirstnameAttribute, LastnameAttribute, UsernameAttribute, AccountControlAttribute };
+                    var attributes = new List<string>() { UserPrincipalNameAttribute, MemberOfAttribute, EmailAttribute, DisplayNameAttribute, FirstnameAttribute, LastnameAttribute, UsernameAttribute, AccountControlAttribute, GuidAttribute };
 
                     if (!string.IsNullOrEmpty(settings.UniqueIdAttributeName))
                     {
                         attributes.Add(settings.UniqueIdAttributeName);
                     }
 
-                    var results = ldapConnection.Search(container, LdapConnection.SCOPE_SUB, SearchFilter.Replace("{key}", UsernameAttribute).Replace("{username}", username), attributes.ToArray(), false);
+                    var usernameKey = settings.Ldap.UsernameProperty == UsernameProperty.sAMAccountName ? UsernameAttribute : UserPrincipalNameAttribute;
+                    var results = ldapConnection.Search(container, LdapConnection.SCOPE_SUB, SearchFilter.Replace("{key}", usernameKey).Replace("{username}", username), attributes.ToArray(), false);
 
                     if (results.HasMore())
                     {
@@ -85,10 +100,12 @@ namespace AuthServer.Core.Provider
                         {
                             IsActive = isActive,
                             Username = entry.getAttribute(UsernameAttribute)?.StringValue,
+                            UPN = entry.getAttribute(UserPrincipalNameAttribute)?.StringValue,
                             Firstname = entry.getAttribute(FirstnameAttribute)?.StringValue,
                             Lastname = entry.getAttribute(LastnameAttribute)?.StringValue,
                             DisplayName = entry.getAttribute(DisplayNameAttribute)?.StringValue,
                             Email = entry.getAttribute(EmailAttribute)?.StringValue,
+                            Guid = GetGuidAsString(entry.getAttribute(GuidAttribute)?.ByteValueArray),
                             UniqueId = uniqueId,
                             Groups = entry.getAttribute(MemberOfAttribute)?.StringValueArray,
                             OU = GetOU(entry.DN)
@@ -110,6 +127,17 @@ namespace AuthServer.Core.Provider
             }
 
             return null;
+        }
+
+        private string GetGuidAsString(sbyte[][] bytes)
+        {
+            if(bytes == null || bytes.Length == 0)
+            {
+                return null;
+            }
+
+            var guid = new Guid(Array.ConvertAll(bytes[0], x => (byte)x));
+            return guid.ToString();
         }
 
         private void ConnectLdapConnection(LdapConnection ldapConnection)
@@ -169,7 +197,14 @@ namespace AuthServer.Core.Provider
                 try
                 {
                     ConnectLdapConnection(ldapConnection);
-                    var usernameDn = settings.Ldap.DomainNetBIOS + @"\" + username;
+                    var usernameDn = username;
+
+                    if (!usernameDn.Contains("@")) // Simple check whether a e-mail address is used
+                    {
+                        // If username is not provided as e-mail address, use netbios\username format
+                        usernameDn = settings.Ldap.DomainNetBIOS + @"\" + username;
+                    }
+
                     ldapConnection.Bind(usernameDn, password);
 
                     return GetInformation(username);
@@ -181,6 +216,12 @@ namespace AuthServer.Core.Provider
                 catch (Exception e)
                 {
                     logger.LogError(e, "Non-LDAP-Error while authenticating");
+                }
+
+                // Needed to prevent Dispose() from an infinite call, see https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard/issues/101
+                if (ldapConnection.TLS)
+                {
+                    ldapConnection.StopTls();
                 }
             }
 

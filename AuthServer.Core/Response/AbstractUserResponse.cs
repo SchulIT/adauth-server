@@ -8,6 +8,9 @@ namespace AuthServer.Core.Response
         [JsonProperty("username")]
         public string Username { get; set; }
 
+        [JsonProperty("upn")]
+        public string UPN { get; set; }
+
         [JsonProperty("firstname")]
         public string Firstname { get; set; }
 
@@ -16,6 +19,9 @@ namespace AuthServer.Core.Response
 
         [JsonProperty("display_name")]
         public string DisplayName { get; set; }
+
+        [JsonProperty("guid")]
+        public string Guid { get; set; }
 
         [JsonProperty("unique_id")]
         public string UniqueId { get; set; }

@@ -50,5 +50,15 @@
         /// chain used by the Domain Controller.
         /// </summary>
         string CertificateThumbprint { get; }
+
+        /// <summary>
+        /// Specifies which attribute is used for usernames.
+        /// </summary>
+        UsernameProperty UsernameProperty { get; }
+
+        /// <summary>
+        /// List of allowed UPN suffixes (only used if UsernameProperty.UserPrincipalName is used)
+        /// </summary>
+        string[] AllowedUpnSuffixes { get; }
     }
 }
