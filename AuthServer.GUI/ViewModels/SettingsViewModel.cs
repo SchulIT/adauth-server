@@ -220,6 +220,10 @@ namespace AuthServer.GUI.ViewModels
                 public string Password { get; set; }
 
                 public string CertificateThumbprint { get; set; }
+
+                public UsernameProperty UsernameProperty { get; set; } = UsernameProperty.sAMAccountName;
+
+                public string[] AllowedUpnSuffixes { get; set; } = Array.Empty<string>();
             }
         }
     }
