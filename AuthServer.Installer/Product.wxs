@@ -19,6 +19,17 @@
             <Directory Id="CONSOLE_INSTALLLOCATION" Name="Console" />
             <Directory Id="SERVICE_INSTALLLOCATION" Name="Service" />
             <Directory Id="GUI_INSTALLLOCATION" Name="GUI" />
+
+            <Component Id="ControlCenterShortcut">
+              <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\{AD16023B-FA0C-4490-8F9F-CAB6972E5DFE}" Type="string" Value="Active Directory Authentication Server Configuration Utility" />
+              <RegistryKey Root="HKCR" Key="CLSID\{AD16023B-FA0C-4490-8F9F-CAB6972E5DFE}" ForceCreateOnInstall="yes" ForceDeleteOnUninstall="yes">
+                <RegistryValue Type="string" Value="Active Directory Authentication Server Configuration Utility" />
+                <RegistryValue Name="System.ControlPanel.Category" Type="string" Value="0,3" />
+                <RegistryValue Name="System.ApplicationName" Type="string" Value="Active Directory Authentication Server Configuration Utility" />
+                <RegistryValue Key="DefaultIcon" Type="string" Value="[GUI_INSTALLLOCATION]AuthServer.GUI.exe" />
+                <RegistryValue Key="Shell\Open\Command" Type="string" Value="[GUI_INSTALLLOCATION]AuthServer.GUI.exe" />
+              </RegistryKey>
+            </Component>
           </Directory>
         </Directory>
       </Directory>
@@ -27,9 +38,10 @@
       <Directory Id="ProgramMenuFolder">
         <Directory Id="MyShortCutsDir" Name="SchulIT">
           <Component Id="ShortCutComponent" Guid="C8221381-EA35-4F1F-AF58-EE338240FCA2">
-            <Shortcut Id="ShortCut" Name="Active Directory Authentication Server Configuration Utility" Target="[GUI_INSTALLLOCATION]\AuthServer.GUI.exe" Icon="icon.ico" />
+            <Shortcut Id="ShortCutConsole" Name="Active Directory Authentication Server Console" Target="[CONSOLE_INSTALLLOCATION]\AuthServer.Console.exe" Icon="icon.ico" />
+            <Shortcut Id="ShortCutGUI" Name="Active Directory Authentication Server Configuration Utility" Target="[GUI_INSTALLLOCATION]\AuthServer.GUI.exe" Icon="icon.ico" />
             <RemoveFolder Id="RemoveShortCut" On="uninstall"/>
-            <RegistryValue Root="HKCU" Key="Software\SchulIT\ADAuthServer\GUI" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            <RegistryValue Root="HKCU" Key="Software\SchulIT\ADAuthServer" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
           </Component>
         </Directory>
       </Directory>
@@ -39,6 +51,7 @@
       <ComponentGroupRef Id="ConsoleSourceComponentGroup" />
       <ComponentGroupRef Id="GuiSourceComponentGroup" />
       <ComponentGroupRef Id="ServiceSourceComponentGroup" />
+      <ComponentRef Id="ControlCenterShortcut"/>
 
       <Feature Id="ShortcutFeature" Title="!(loc.StartmenuShortcut)" Level="1">
         <ComponentRef Id="ShortCutComponent"/>
