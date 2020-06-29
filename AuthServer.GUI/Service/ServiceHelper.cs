@@ -6,11 +6,11 @@ namespace AuthServer.GUI.Service
 {
     public class ServiceHelper : IServiceHelper
     {
-        private const string ServiceName = "AD Auth Server";
+        private const string ServiceName = "Active Directory Authentication Server";
 
         private Task<ServiceController> GetServiceAsync()
         {
-            return Task.Run(() => ServiceController.GetServices().FirstOrDefault(x => x.ServiceName == ServiceName));
+            return Task.Run(() => ServiceController.GetServices().FirstOrDefault(x => x.DisplayName == ServiceName));
         }
 
         public async Task<bool> IsServiceInstalledAsync()
