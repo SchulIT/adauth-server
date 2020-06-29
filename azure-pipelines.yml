@@ -59,11 +59,15 @@ stages:
         msbuildArgs: '/p:RunWixToolsOutOfProc=true'
 
     - task: CmdLine@2
-      displayName: Copy and rename MSI
+      displayName: Copy and rename MSI (de)
       inputs:
-        script: 
-          - copy AuthServer.Installer\bin\$(buildPlatform)\Release\de-de\AuthServer.Installer.msi output\setup-$(Build.SourceBranchName)-$(buildPlatform)-de.msi
-          - copy AuthServer.Installer\bin\$(buildPlatform)\Release\en-us\AuthServer.Installer.msi output\setup-$(Build.SourceBranchName)-$(buildPlatform)-en.msi
+        script: copy AuthServer.Installer\bin\$(buildPlatform)\Release\de-de\AuthServer.Installer.msi output\setup-$(Build.SourceBranchName)-$(buildPlatform)-de.msi
+      condition: succeeded()
+
+    - task: CmdLine@2
+      displayName: Copy and rename MSI (en)
+      inputs:
+        script: copy AuthServer.Installer\bin\$(buildPlatform)\Release\en-us\AuthServer.Installer.msi output\setup-$(Build.SourceBranchName)-$(buildPlatform)-en.msi
       condition: succeeded()
 
     - task: PublishPipelineArtifact@1
