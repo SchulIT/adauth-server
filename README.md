@@ -1,5 +1,9 @@
 # AD Auth Server
 
+[![Build Status](https://dev.azure.com/schulit/Active%20Directory%20Authentication%20Server/_apis/build/status/SchulIT.adauth-server?branchName=master)](https://dev.azure.com/schulit/Active%20Directory%20Authentication%20Server/_build/latest?definitionId=8&branchName=master)
+![GitHub](https://img.shields.io/github/license/schulit/adauth-server?style=flat-square)
+![.NET Core 3.1](https://img.shields.io/badge/.NET%20Core-3.1-brightgreen?style=flat-square)
+
 Mithilfe des Active Directory Authentication Server (AD Auth Server) kann eine Authentifizierung mithilfe eines lokalen Active Directories stattfinden. Der Server wird für den Identity Provider benötigt, um eine Anmeldung mit den Anmeldedaten aus dem Schulnetzwerk zu ermöglichen.
 
 # Protokoll
