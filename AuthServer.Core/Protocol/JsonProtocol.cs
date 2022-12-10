@@ -12,7 +12,7 @@ namespace AuthServer.Core.Protocol
     /// </summary>
     public class JsonProtocol : IProtocol
     {
-        private IProtocolHandler protocolHandler;
+        private readonly IProtocolHandler protocolHandler;
 
         public JsonProtocol(IProtocolHandler protocolHandler)
         {

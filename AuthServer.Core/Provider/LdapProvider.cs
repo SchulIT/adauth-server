@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AuthServer.Core.Provider
@@ -68,24 +69,12 @@ namespace AuthServer.Core.Provider
                     var container = "DC=" + settings.Ldap.DomainFQDN.Replace(".", ",DC=");
                     var attributes = new List<string>() { UserPrincipalNameAttribute, MemberOfAttribute, EmailAttribute, DisplayNameAttribute, FirstnameAttribute, LastnameAttribute, UsernameAttribute, AccountControlAttribute, GuidAttribute };
 
-                    if (!string.IsNullOrEmpty(settings.UniqueIdAttributeName))
-                    {
-                        attributes.Add(settings.UniqueIdAttributeName);
-                    }
-
                     var usernameKey = settings.Ldap.UsernameProperty == UsernameProperty.sAMAccountName ? UsernameAttribute : UserPrincipalNameAttribute;
                     var results = ldapConnection.Search(container, LdapConnection.SCOPE_SUB, SearchFilter.Replace("{key}", usernameKey).Replace("{username}", username), attributes.ToArray(), false);
 
                     if (results.HasMore())
                     {
                         var entry = results.Next();
-
-                        string uniqueId = null;
-
-                        if (!string.IsNullOrEmpty(settings.UniqueIdAttributeName))
-                        {
-                            uniqueId = entry.getAttribute(settings.UniqueIdAttributeName).StringValue;
-                        }
 
                         var isActive = false;
                         var accountControlValue = entry.getAttribute(AccountControlAttribute)?.StringValue;
@@ -106,7 +95,6 @@ namespace AuthServer.Core.Provider
                             DisplayName = entry.getAttribute(DisplayNameAttribute)?.StringValue,
                             Email = entry.getAttribute(EmailAttribute)?.StringValue,
                             Guid = GetGuidAsString(entry.getAttribute(GuidAttribute)?.ByteValueArray),
-                            UniqueId = uniqueId,
                             Groups = entry.getAttribute(MemberOfAttribute)?.StringValueArray,
                             OU = GetOU(entry.DN)
                         };
@@ -231,6 +219,164 @@ namespace AuthServer.Core.Provider
         private string GetOU(string dn)
         {
             return (new DN(dn).Parent.ToString());
+        }
+
+        private LdapAttribute GetUnicodePwdAttribute(string password)
+        {
+            var encodedPassword = SupportClass.ToSByteArray(Encoding.Unicode.GetBytes($"\"{password}\""));
+            return new LdapAttribute("unicodePwd", encodedPassword);
+        }
+
+        public PasswordResult ChangePassword(string username, string oldPassword, string newPassword)
+        {
+            var regexp = new Regex(UsernameRegexp);
+
+            if (!regexp.IsMatch(username))
+            {
+                logger.LogInformation($"Invalid username detected: '{username}'");
+                return PasswordResult.UnknownError;
+            }
+
+            var result = PasswordResult.UnknownError;
+
+            using (var ldapConnection = new LdapConnection())
+            {
+                try
+                {
+                    ConnectLdapConnection(ldapConnection);
+                    ldapConnection.Bind(GetUserDn(username), oldPassword);
+
+                    // BOUND AS USER                    
+
+                    var modifications = new LdapModification[]
+                    {
+                        new LdapModification(LdapModification.DELETE, GetUnicodePwdAttribute(oldPassword)),
+                        new LdapModification(LdapModification.ADD, GetUnicodePwdAttribute(newPassword))
+                    };
+
+                    var usernameDn = FindDnForUser(GetUserDn(username), ldapConnection);
+
+                    if (usernameDn != null)
+                    {
+                        ldapConnection.Modify(usernameDn, modifications);
+                        result = PasswordResult.Success;
+                    }
+                }
+                catch (LdapException e)
+                {
+                    logger.LogDebug(e, "LDAP-Error while authenticating");
+
+                    if (e.LdapErrorMessage.Contains("data 52e"))
+                    {
+                        result = PasswordResult.InvalidCredentials;
+                    }
+                    else if (e.LdapErrorMessage.Contains("data 773"))
+                    {
+                        result = PasswordResult.MustChangePassword;
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Non-LDAP-Error while authenticating");
+                }
+
+                // Needed to prevent Dispose() from an infinite call, see https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard/issues/101
+                if (ldapConnection.TLS)
+                {
+                    ldapConnection.StopTls();
+                }
+
+                return result;
+            }
+        }
+
+        private string GetUserDn(string username)
+        {
+            if (!username.Contains("@")) // Simple check whether a e-mail address is used
+            {
+                // If username is not provided as e-mail address, use netbios\username format
+                return settings.Ldap.DomainNetBIOS + @"\" + username;
+            }
+
+            return username;
+        }
+
+        private string FindDnForUser(string username, LdapConnection ldapConnection)
+        {
+            var container = "DC=" + settings.Ldap.DomainFQDN.Replace(".", ",DC=");
+            var attributes = new List<string>() { UserPrincipalNameAttribute, MemberOfAttribute, EmailAttribute, DisplayNameAttribute, FirstnameAttribute, LastnameAttribute, UsernameAttribute, AccountControlAttribute, GuidAttribute };
+
+            var usernameKey = settings.Ldap.UsernameProperty == UsernameProperty.sAMAccountName ? UsernameAttribute : UserPrincipalNameAttribute;
+            var results = ldapConnection.Search(container, LdapConnection.SCOPE_SUB, SearchFilter.Replace("{key}", usernameKey).Replace("{username}", username), attributes.ToArray(), false);
+
+            if (results.HasMore())
+            {
+                var entry = results.Next();
+
+                return entry.DN;
+            }
+
+            return null;
+        }
+
+        public PasswordResult ResetPassword(string username, string newPassword, string adminUsername, string adminPassword)
+        {
+            var regexp = new Regex(UsernameRegexp);
+
+            if (!regexp.IsMatch(username))
+            {
+                logger.LogInformation($"Invalid username detected: '{username}'");
+                return PasswordResult.UnknownError;
+            }
+
+            var result = PasswordResult.UnknownError;
+
+            using (var ldapConnection = new LdapConnection())
+            {
+                try
+                {
+                    ConnectLdapConnection(ldapConnection);
+                    ldapConnection.Bind(GetUserDn(adminUsername), adminPassword);
+
+                    // BOUND AS ADMIN
+                    // NOW CHANGE PASSWORD
+
+                    var password = $"\"{newPassword}\"";
+                    var encodedPassword = SupportClass.ToSByteArray(Encoding.Unicode.GetBytes(password));
+                    var passwordAttribute = new LdapAttribute("unicodePwd", encodedPassword);
+
+                    var modification = new LdapModification(LdapModification.REPLACE, passwordAttribute);
+
+                    var usernameDn = FindDnForUser(GetUserDn(username), ldapConnection);
+
+                    if (usernameDn != null)
+                    {
+                        ldapConnection.Modify(usernameDn, modification);
+                        result = PasswordResult.Success;
+                    }
+                    else
+                    {
+                        result = PasswordResult.UserNotFound;
+                    }
+                }
+                catch (LdapException e)
+                {
+                    logger.LogDebug(e, "LDAP-Error while authenticating");
+                    result = PasswordResult.InvalidCredentials;
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e, "Non-LDAP-Error while authenticating");
+                }
+
+                // Needed to prevent Dispose() from an infinite call, see https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard/issues/101
+                if (ldapConnection.TLS)
+                {
+                    ldapConnection.StopTls();
+                }
+
+                return result;
+            }
         }
     }
 }

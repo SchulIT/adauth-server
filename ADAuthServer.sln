@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer.Core", "AuthServer.Core\AuthServer.Core.csproj", "{4D7E0C8E-A95B-4E43-B46E-362F57940581}"
 EndProject
@@ -10,8 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer.WindowsService", "AuthServer.WindowsService\AuthServer.WindowsService.csproj", "{4D05CE36-2AEE-4530-8040-D5D27AFDADA5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthServer.GUI", "AuthServer.GUI\AuthServer.GUI.csproj", "{C30B39EE-3A00-4A03-9557-7ECC7AE9F821}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskDialog", "TaskDialog\TaskDialog\TaskDialog.csproj", "{F083266D-F986-475B-B91F-B6CDAD064CD7}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "AuthServer.Installer", "AuthServer.Installer\AuthServer.Installer.wixproj", "{6CB9BFC8-B73D-487B-971A-AB6E8FEAC64B}"
 EndProject
@@ -55,14 +53,6 @@ Global
 		{C30B39EE-3A00-4A03-9557-7ECC7AE9F821}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C30B39EE-3A00-4A03-9557-7ECC7AE9F821}.Release|x64.ActiveCfg = Release|x64
 		{C30B39EE-3A00-4A03-9557-7ECC7AE9F821}.Release|x64.Build.0 = Release|x64
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Debug|x64.Build.0 = Debug|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Release|x64.ActiveCfg = Release|Any CPU
-		{F083266D-F986-475B-B91F-B6CDAD064CD7}.Release|x64.Build.0 = Release|Any CPU
 		{6CB9BFC8-B73D-487B-971A-AB6E8FEAC64B}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{6CB9BFC8-B73D-487B-971A-AB6E8FEAC64B}.Debug|x64.ActiveCfg = Debug|x64
 		{6CB9BFC8-B73D-487B-971A-AB6E8FEAC64B}.Debug|x64.Build.0 = Debug|x64

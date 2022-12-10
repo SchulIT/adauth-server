@@ -1,20 +1,20 @@
 ﻿using AuthServer.Client;
 using AuthServer.GUI.UI;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Security.Cryptography.X509Certificates;
 
 namespace AuthServer.GUI.ViewModels
 {
-    public class ClientViewModel : ViewModelBase
+    public class ClientViewModel : ObservableRecipient
     {
         private bool isBusy;
 
         public bool IsBusy
         {
             get { return isBusy; }
-            set { Set(() => IsBusy, ref isBusy, value); }
+            set { SetProperty(ref isBusy, value); }
         }
 
         private string hostname = "127.0.0.1";
@@ -24,9 +24,9 @@ namespace AuthServer.GUI.ViewModels
             get { return hostname; }
             set
             {
-                Set(() => Hostname, ref hostname, value);
+                SetProperty(ref hostname, value);
 
-                RequestCommand?.RaiseCanExecuteChanged();
+                RequestCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -37,9 +37,9 @@ namespace AuthServer.GUI.ViewModels
             get { return port; }
             set
             {
-                Set(() => Port, ref port, value);
+                SetProperty(ref port, value);
 
-                RequestCommand?.RaiseCanExecuteChanged();
+                RequestCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -50,9 +50,9 @@ namespace AuthServer.GUI.ViewModels
             get { return request; }
             set
             {
-                Set(() => Request, ref request, value);
+                SetProperty<string>(ref request, value);
 
-                RequestCommand?.RaiseCanExecuteChanged();
+                RequestCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -61,7 +61,7 @@ namespace AuthServer.GUI.ViewModels
         public string Response
         {
             get { return response; }
-            set { Set(() => Response, ref response, value); }
+            set { SetProperty(ref response, value); }
         }
 
         private X509Certificate2 certificate;
@@ -69,7 +69,7 @@ namespace AuthServer.GUI.ViewModels
         public X509Certificate2 Certificate
         {
             get { return certificate; }
-            set { Set(() => Certificate, ref certificate, value); }
+            set { SetProperty(ref certificate, value); }
         }
 
         public RelayCommand RequestCommand { get; }

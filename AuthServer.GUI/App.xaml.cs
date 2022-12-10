@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ModernWpf;
 using System.Windows;
+using System.Windows.Media;
 
 namespace AuthServer.GUI
 {
@@ -13,5 +9,9 @@ namespace AuthServer.GUI
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            ThemeManager.Current.AccentColor = (Color)ColorConverter.ConvertFromString("#0078D7");
+        }
     }
 }

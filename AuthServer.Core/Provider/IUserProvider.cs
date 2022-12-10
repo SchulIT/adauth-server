@@ -7,6 +7,10 @@
     {
         User Authenticate(string username, string password);
 
+        PasswordResult ChangePassword(string username, string oldPassword, string newPassword);
+
+        PasswordResult ResetPassword(string username, string newPassword, string adminUsername, string adminPassword);
+
         User GetInformation(string username);
     }
 }

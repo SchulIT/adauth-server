@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Interop;
-using KPreisser.UI;
-using Microsoft.Win32;
+using Application = System.Windows.Application;
 
 namespace AuthServer.GUI.UI
 {
@@ -11,11 +11,12 @@ namespace AuthServer.GUI.UI
     {
         public string BrowseFile()
         {
-            var dialog = new OpenFileDialog();
-
-            dialog.CheckFileExists = true;
-            dialog.Multiselect = false;
-            dialog.Filter = "Certificate (*.pfx)|*.pfx";
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                CheckFileExists = true,
+                Multiselect = false,
+                Filter = "Certificate (*.pfx)|*.pfx"
+            };
 
             var result = dialog.ShowDialog();
 
@@ -31,27 +32,26 @@ namespace AuthServer.GUI.UI
         {
             var page = new TaskDialogPage
             {
-                Title = Strings.Strings.ErrorTitle,
-                Text = Strings.Strings.ErrorText,
-                Instruction = e.GetType().ToString(),
+                Caption = "Fehler",
+                Text = "Ein Fehler ist aufgetreten",
+                Icon = TaskDialogIcon.Error,
                 Expander =
                 {
                     Text = e.Message,
-                    ExpandFooterArea = true
+                    Expanded = true
                 }
             };
 
             var activeWindow = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
 
-            var dialog = new TaskDialog(page);
 
             if (activeWindow != null)
             {
-                dialog.Show(new WindowInteropHelper(activeWindow).Handle);
+                TaskDialog.ShowDialog(new WindowInteropHelper(activeWindow).Handle, page);
             }
             else
             {
-                dialog.Show();
+                TaskDialog.ShowDialog(page);
             }
         }
     }

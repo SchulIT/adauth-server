@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace AuthServer.GUI.ViewModels
 {
-    public class AboutViewModel : ViewModelBase
+    public class AboutViewModel : ObservableRecipient
     {
 
         public string ApplicationName { get; private set; }
@@ -15,7 +15,7 @@ namespace AuthServer.GUI.ViewModels
 
         public string Version { get; private set; }
 
-        public string ProjectUrl { get; } = @"https://github.com/SchulIT/auth-server"; // TODO: Read from assembly
+        public string ProjectUrl { get; } = @"https://github.com/SchulIT/adauth-server"; // TODO: Read from assembly
 
         public List<Library> Libraries { get; } = new List<Library>();
 

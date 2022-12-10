@@ -15,11 +15,5 @@ namespace AuthServer.Core.Settings
 
         [JsonProperty("ldap")]
         ILdapSettings Ldap { get; }
-
-        /// <summary>
-        /// Attribute in which an unique ID is stored in
-        /// </summary>
-        [JsonProperty("uniqueid_attribute")]
-        string UniqueIdAttributeName { get; }
     }
 }

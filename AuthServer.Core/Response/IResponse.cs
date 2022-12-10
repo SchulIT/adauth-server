@@ -8,7 +8,5 @@ namespace AuthServer.Core.Response
     /// </summary>
     public interface IResponse
     {
-        [JsonProperty("success")]
-        bool Success { get; set; }
     }
 }

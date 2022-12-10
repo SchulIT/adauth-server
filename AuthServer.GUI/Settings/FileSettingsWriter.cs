@@ -28,7 +28,6 @@ namespace AuthServer.GUI.Settings
         private JsonSettings ToJsonSettings(ISettings settings)
         {
             var jsonSettings = new JsonSettings();
-            jsonSettings.UniqueIdAttributeName = settings.UniqueIdAttributeName;
 
             var ldapSettings = jsonSettings.Ldap as JsonLdapSettings;
             ldapSettings.Server = settings.Ldap.Server;

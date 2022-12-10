@@ -1,21 +1,21 @@
 ﻿using AuthServer.GUI.Service;
 using AuthServer.GUI.UI;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace AuthServer.GUI.ViewModels
 {
-    public class StatusViewModel : ViewModelBase
+    public class StatusViewModel : ObservableRecipient
     {
         private bool isBusy;
 
         public bool IsBusy
         {
             get { return isBusy; }
-            set { Set(() => IsBusy, ref isBusy, value); }
+            set { SetProperty(ref isBusy, value); }
         }
         
         private bool isServiceInstalled;
@@ -25,10 +25,10 @@ namespace AuthServer.GUI.ViewModels
             get { return isServiceInstalled; }
             set
             {
-                Set(() => IsServiceInstalled, ref isServiceInstalled, value);
+                SetProperty(ref isServiceInstalled, value);
 
-                StartServiceCommand?.RaiseCanExecuteChanged();
-                StopServiceCommand?.RaiseCanExecuteChanged();
+                StartServiceCommand?.NotifyCanExecuteChanged();
+                StopServiceCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -39,10 +39,10 @@ namespace AuthServer.GUI.ViewModels
             get { return isServiceRunning; }
             set
             {
-                Set(() => IsServiceRunning, ref isServiceRunning, value);
+                SetProperty(ref isServiceRunning, value);
 
-                StartServiceCommand?.RaiseCanExecuteChanged();
-                StopServiceCommand?.RaiseCanExecuteChanged();
+                StartServiceCommand?.NotifyCanExecuteChanged();
+                StopServiceCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -53,10 +53,10 @@ namespace AuthServer.GUI.ViewModels
             get { return isServerRunning; }
             set
             {
-                Set(() => IsServerRunning, ref isServerRunning, value);
+                SetProperty(ref isServerRunning, value);    
 
-                StartServiceCommand?.RaiseCanExecuteChanged();
-                StopServiceCommand?.RaiseCanExecuteChanged();
+                StartServiceCommand?.NotifyCanExecuteChanged();
+                StopServiceCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -152,9 +152,10 @@ namespace AuthServer.GUI.ViewModels
                         var ipAddress = settingsViewModel.Settings.Server.IPv6 ? "::1" : "127.0.0.1";
 
                         try
-                        {
-                            client.Connect(ipAddress, port);
-                            isServerRunning = true;
+                        { 
+                            var result = client.BeginConnect(ipAddress, port, null, null);
+                            isServerRunning = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+                            client.EndConnect(result);
                         }
                         catch (Exception e)
                         {

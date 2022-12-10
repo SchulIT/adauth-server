@@ -1,0 +1,119 @@
+﻿<Page x:Class="AuthServer.GUI.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource ViewModelLocator}, Path=Settings}"
+      Title="SettingsPage">
+
+    <DockPanel>
+        <ui:CommandBar DockPanel.Dock="Bottom">
+            <ui:AppBarButton Command="{Binding SaveCommand}" Label="Speichern" Icon="Save" />
+        </ui:CommandBar>
+
+        <ScrollViewer VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <Grid Margin="7">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <GroupBox Header="Server" Grid.Row="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <CheckBox IsChecked="{Binding Settings.Server.IPv6, Mode=TwoWay}" Content="IPv6 aktiv" />
+                        <ui:NumberBox SpinButtonPlacementMode="Inline" Grid.Row="1" Value="{Binding Settings.Server.Port}" Grid.Column="1" Minimum="1024" Maximum="65535" ui:ControlHelper.Header="Port" />
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="TLS-Einstellungen" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding Settings.Tls.Certificate}" ui:ControlHelper.Header="Zertifikat" />
+                            <Button Grid.Column="1" Command="{Binding BrowseCommand}" Margin="5,0,0,0" Content="auswählen" VerticalAlignment="Bottom" />
+                        </Grid>
+                        <TextBox Grid.Row="1" Text="{Binding Settings.Tls.PreSharedKey, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Passwort" />
+
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Button HorizontalAlignment="Left" Command="{Binding TestCommand}" Content="Testen" />
+
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBox IsReadOnly="True" Text="{Binding Certificate.Subject, Mode=OneWay}" ui:ControlHelper.Header="Antragsteller"/>
+                                <TextBox Grid.Row="1" IsReadOnly="True" Text="{Binding Certificate.Issuer, Mode=OneWay}" ui:ControlHelper.Header="Aussteller" />
+                                <TextBox Grid.Row="2" IsReadOnly="True" Text="{Binding Certificate.Thumbprint, Mode=OneWay}" ui:ControlHelper.Header="Fingerabdruck" />
+                                <TextBox Grid.Row="3" IsReadOnly="True" Text="{Binding Certificate.NotBefore, Mode=OneWay}" ui:ControlHelper.Header="Gültig ab"/>
+                                <TextBox Grid.Row="4" IsReadOnly="True" Text="{Binding Certificate.NotAfter, Mode=OneWay}" ui:ControlHelper.Header="Gültig bis" />
+                                <TextBox Grid.Row="5" IsReadOnly="True" Text="{Binding Certificate.HasPrivateKey, Mode=OneWay, Converter={StaticResource BooleanToStringConverter}}" ui:ControlHelper.Header="Privater Schlüssel vorhanden" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Server-Einstellungen" Grid.Row="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBox Text="{Binding Settings.Ldap.Server, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Domain Controller" />
+                        <ui:NumberBox SpinButtonPlacementMode="Inline" Grid.Row="1" Value="{Binding Settings.Ldap.Port}" Grid.Column="1" ui:ControlHelper.Header="LDAP-Port" />
+                        <CheckBox Grid.Row="2" IsChecked="{Binding Settings.Ldap.UseSSL}" Content="LDAPS verwenden" />
+                        <CheckBox Grid.Row="3" IsChecked="{Binding Settings.Ldap.UseTLS}" Content="TLS verwenden (STARTTLS)" />
+                        <TextBox Grid.Row="4" Text="{Binding Settings.Ldap.CertificateThumbprint, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Fingerabdruck des Zertifikats (LDAPS)"></TextBox>
+
+                        <TextBlock Grid.Row="5" TextWrapping="Wrap">
+                            Fingerabdruck eines der Zertifikate in der Zertifikatskette, die bei der Kommunikation mit dem LDAP Server verwendet wird.
+                        </TextBlock>
+
+                        <TextBox Grid.Row="6" Text="{Binding Settings.Ldap.DomainFQDN, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Fully-Qualified Domain Name" />
+                        <TextBox Grid.Row="7" Text="{Binding Settings.Ldap.DomainNetBIOS, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="NetBIOS Name der Domain" />
+
+                        <TextBox Grid.Row="8" Text="{Binding Settings.Ldap.Username, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Benutzername (lesender Active Directory-Benutzer)" />
+                        <TextBox Grid.Row="9" Text="{Binding Settings.Ldap.Password, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="Passwort (lesender Active Directory-Benutzer" />
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
+</Page>

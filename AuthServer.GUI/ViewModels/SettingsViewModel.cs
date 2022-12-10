@@ -1,8 +1,8 @@
 ﻿using AuthServer.Core.Settings;
 using AuthServer.GUI.Settings;
 using AuthServer.GUI.UI;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AuthServer.GUI.ViewModels
 {
-    public class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ObservableRecipient
     {
         private bool isBusy = false;
 
         public bool IsBusy
         {
             get { return isBusy; }
-            set { Set(() => IsBusy, ref isBusy, value); }
+            set { SetProperty(ref isBusy, value); }
         }
 
         private readonly MemorySettings settings = new MemorySettings();
@@ -32,7 +32,7 @@ namespace AuthServer.GUI.ViewModels
         public X509Certificate2 Certificate
         {
             get { return certificate; }
-            set { Set(() => Certificate, ref certificate, value); }
+            set { SetProperty(ref certificate, value); }
         }
         
         public RelayCommand SaveCommand { get; }
@@ -42,9 +42,9 @@ namespace AuthServer.GUI.ViewModels
 
         public RelayCommand BrowseCommand { get; }
 
-        private ISettingsWriter settingsWriter;
-        private ISettingsReader settingsReader;
-        private IDialogHelper dialogHelper;
+        private readonly ISettingsWriter settingsWriter;
+        private readonly ISettingsReader settingsReader;
+        private readonly IDialogHelper dialogHelper;
 
         public SettingsViewModel(ISettingsReader settingsReader, ISettingsWriter settingsWriter, IDialogHelper dialogHelper)
         {
@@ -78,6 +78,7 @@ namespace AuthServer.GUI.ViewModels
             if(filename != null)
             {
                 (Settings.Tls as MemorySettings.MemoryTlsSettings).Certificate = filename;
+                OnPropertyChanged();
             }
         }
 
@@ -152,8 +153,6 @@ namespace AuthServer.GUI.ViewModels
                 return;
             }
 
-            Settings.UniqueIdAttributeName = storedSettings.UniqueIdAttributeName;
-
             var ldapSettings = (Settings.Ldap as MemorySettings.MemoryLdapSettings);
 
             ldapSettings.Server = storedSettings.Ldap.Server;
@@ -174,7 +173,7 @@ namespace AuthServer.GUI.ViewModels
             tlsSettings.Certificate = storedSettings.Tls.Certificate;
             tlsSettings.PreSharedKey = storedSettings.Tls.PreSharedKey;
 
-            RaisePropertyChanged(() => Settings);
+            OnPropertyChanged();
         }
 
         public class MemorySettings : ISettings
@@ -189,9 +188,9 @@ namespace AuthServer.GUI.ViewModels
 
             public class MemoryServerSettings : IServerSettings
             {
-                public int Port { get; set; }
+                public int Port { get; set; } = 55117;
 
-                public bool IPv6 { get; set; }
+                public bool IPv6 { get; set; } = false;
             }
 
             public class MemoryTlsSettings : ITlsSettings
@@ -205,11 +204,11 @@ namespace AuthServer.GUI.ViewModels
             {
                 public string Server { get; set; }
 
-                public int Port { get; set; }
+                public int Port { get; set; } = 389;
 
-                public bool UseSSL { get; set; }
+                public bool UseSSL { get; set; } = false;
 
-                public bool UseTLS { get; set; }
+                public bool UseTLS { get; set; } = true;
 
                 public string DomainFQDN { get; set; }
 

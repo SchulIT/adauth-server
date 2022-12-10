@@ -47,7 +47,6 @@ namespace AuthServer.Core.Handler
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 DisplayName = user.DisplayName,
-                UniqueId = user.UniqueId,
                 OU = user.OU,
                 Email = user.Email,
                 Groups = user.Groups

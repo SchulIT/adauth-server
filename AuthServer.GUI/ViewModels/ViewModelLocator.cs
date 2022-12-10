@@ -3,8 +3,7 @@ using AuthServer.GUI.Service;
 using AuthServer.GUI.Settings;
 using AuthServer.GUI.UI;
 using Autofac;
-using GalaSoft.MvvmLight.Messaging;
-
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AuthServer.GUI.ViewModels
 {
@@ -27,7 +26,6 @@ namespace AuthServer.GUI.ViewModels
             builder.RegisterType<ServiceHelper>().As<IServiceHelper>().SingleInstance();
             builder.RegisterType<Client.Client>().As<IClient>().SingleInstance();
 
-            builder.RegisterType<Messenger>().As<IMessenger>().SingleInstance();
             builder.RegisterType<UIDispatcher>().As<IDispatcher>().SingleInstance();
 
             builder.RegisterType<SettingsViewModel>().AsSelf().SingleInstance().OnActivated(async vm => await vm.Instance.LoadSettingsAsync());
@@ -38,9 +36,6 @@ namespace AuthServer.GUI.ViewModels
 
             container = builder.Build();
         }
-
-
-        public IMessenger Messenger { get { return container.Resolve<IMessenger>(); } }
 
         public SettingsViewModel Settings { get { return container.Resolve<SettingsViewModel>(); } }
 

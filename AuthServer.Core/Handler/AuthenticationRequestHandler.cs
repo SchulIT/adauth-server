@@ -7,7 +7,7 @@ namespace AuthServer.Core.Handler
     public class AuthenticationRequestHandler : IRequestHandler
     {
 
-        private IUserProvider userProvider;
+        private readonly IUserProvider userProvider;
 
         public AuthenticationRequestHandler(IUserProvider userProvider)
         {
@@ -38,7 +38,6 @@ namespace AuthServer.Core.Handler
                 Lastname = user.Lastname,
                 DisplayName = user.DisplayName,
                 Guid = user.Guid,
-                UniqueId = user.UniqueId,
                 OU = user.OU,
                 Email = user.Email,
                 Groups = user.Groups

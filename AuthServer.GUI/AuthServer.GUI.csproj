@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
+    <TargetFramework>net6.0-windows10.0.18362.0</TargetFramework>
+    <UseWPF>True</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Product>Active Directory Authentication Server Configuration Utility</Product>
     <Company>SchulIT</Company>
@@ -11,11 +11,13 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/schulit/adauth-server</PackageProjectUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <Copyright>© 2020 SchulIT</Copyright>
+    <Copyright>© 2022 SchulIT</Copyright>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageId>AuthServer.GUI</PackageId>
     <Platforms>AnyCPU;x64</Platforms>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
+    <UseWindowsForms>True</UseWindowsForms>
+    <StartupObject>AuthServer.GUI.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,34 +33,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.0.0" />
-    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.78" />
-    <PackageReference Include="MvvmLightStd10" Version="5.4.1.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
+    <PackageReference Include="Autofac" Version="6.5.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AuthServer.Core\AuthServer.Core.csproj" />
-    <ProjectReference Include="..\TaskDialog\TaskDialog\TaskDialog.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Strings\Strings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings\Strings.de.resx">
-      <Generator></Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Strings\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

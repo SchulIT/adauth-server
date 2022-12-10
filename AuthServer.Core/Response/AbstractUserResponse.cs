@@ -23,9 +23,6 @@ namespace AuthServer.Core.Response
         [JsonProperty("guid")]
         public string Guid { get; set; }
 
-        [JsonProperty("unique_id")]
-        public string UniqueId { get; set; }
-
         [JsonProperty("ou")]
         public string OU { get; set; }
 

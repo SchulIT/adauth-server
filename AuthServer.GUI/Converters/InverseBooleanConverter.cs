@@ -4,17 +4,16 @@ using System.Windows.Data;
 
 namespace AuthServer.GUI.Converter
 {
-    public class BooleanToStringConverter : IValueConverter
+    public class InverseBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var boolValue = (bool)value;
-            return boolValue ? "ja" : "nein";
+            return (bool)value != true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return (bool)value != true;
         }
     }
 }

@@ -60,7 +60,7 @@ namespace AuthServer.Core.Server
         /// <summary>
         /// Thread which closes dead connections automatically.
         /// </summary>
-        private Thread deadConnectionsThread;
+        private readonly Thread deadConnectionsThread;
 
         #region Services
 

@@ -1,5 +1,7 @@
-﻿using AuthServer.GUI.ViewModels;
+﻿using ModernWpf.Controls;
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace AuthServer.GUI.Views
@@ -9,22 +11,36 @@ namespace AuthServer.GUI.Views
         public MainView()
         {
             InitializeComponent();
-
-            Loaded += OnLoaded;
+            navigationView.SelectedItem = navigationView.MenuItems.OfType<NavigationViewItem>().First();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            var locator = App.Current.Resources["ViewModelLocator"] as ViewModelLocator;
-            var statusViewModel = locator.Status;
+            var selectedItem = args.SelectedItem as NavigationViewItem;
+            if(selectedItem == null)
+            {
+                return;
+            }
 
-            statusViewModel.CheckCommand.Execute(null);
-        }
+            var targetPage = selectedItem.Tag switch
+            {
+                "status" => typeof(StatusPage),
+                "client" => typeof(ClientPage),
+                "settings" => typeof(SettingsPage),
+                "about" => typeof(AboutPage),
+                _ => null
+            };
 
-        private void OnRequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
-            e.Handled = true;
+            if(targetPage != null)
+            {
+                try
+                {
+                    frame.Navigate(targetPage);
+                } catch(Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
         }
     }
 }

@@ -32,6 +32,12 @@ namespace AuthServer.Core.Json
 
                 case "status":
                     return new StatusRequest();
+
+                case "change_password":
+                    return new ChangePasswordRequest();
+
+                case "reset_password":
+                    return new ResetPasswordRequest();
             }
 
             throw new ArgumentException(string.Format("Unknown action {0}", action));

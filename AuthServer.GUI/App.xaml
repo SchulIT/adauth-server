@@ -3,13 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:AuthServer.GUI.Converter"
              xmlns:vm="clr-namespace:AuthServer.GUI.ViewModels"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
              StartupUri="Views/MainView.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <converters:BooleanToStringConverter x:Key="BooleanToStringConverter" />
             <converters:JsonFormatterConverter x:Key="JsonFormatterConverter" />
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 
             <vm:ViewModelLocator x:Key="ViewModelLocator" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemeResources />
+                <ui:XamlControlsResources />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

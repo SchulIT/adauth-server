@@ -15,9 +15,6 @@ namespace AuthServer.Core.Settings
         [JsonProperty("ldap")]
         public ILdapSettings Ldap { get; } = new JsonLdapSettings();
 
-        [JsonProperty("interal_id")]
-        public string UniqueIdAttributeName { get; set; }
-
         public static ISettings LoadSettings()
         {
             var file = GetPath();
@@ -77,7 +74,7 @@ namespace AuthServer.Core.Settings
         public bool UseSSL { get; set; } = false;
 
         [JsonProperty("tls")]
-        public bool UseTLS { get; set; } = false;
+        public bool UseTLS { get; set; } = true;
 
         [JsonProperty("domain_netbios")]
         public string DomainNetBIOS { get; set; }
