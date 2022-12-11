@@ -1,8 +1,8 @@
-# AD Auth Server
+# Active Directory Authentication Server
 
 [![Build Status](https://dev.azure.com/schulit/Active%20Directory%20Authentication%20Server/_apis/build/status/SchulIT.adauth-server?branchName=master)](https://dev.azure.com/schulit/Active%20Directory%20Authentication%20Server/_build/latest?definitionId=8&branchName=master)
 ![GitHub](https://img.shields.io/github/license/schulit/adauth-server?style=flat-square)
-![.NET Core 3.1](https://img.shields.io/badge/.NET%20Core-3.1-brightgreen?style=flat-square)
+![.NET 6.0](https://img.shields.io/badge/.NET%206.0-brightgreen?style=flat-square)
 
 Mithilfe des Active Directory Authentication Server (AD Auth Server) kann eine Authentifizierung mithilfe eines lokalen Active Directories stattfinden. Der Server wird für den Identity Provider benötigt, um eine Anmeldung mit den Anmeldedaten aus dem Schulnetzwerk zu ermöglichen.
 
@@ -33,20 +33,20 @@ Anfrage:
 ```json
 {
     "action": "auth",
-    "username": "m.mustermann",
+    "username": "m.mustermann@example.de",
     "password": "secret-password"
 }
+```
 
 Antwort (Anmeldung erfolgreich):
 
 ```json
 {
     "success": true,
-    "username": "m.mustermann",
+    "username": "m.mustermann@example.de",
     "firstname": "Max",
     "lastname": "Mustermann",
     "display_name": "Mustermann, Max",
-    "unique_id": "1",
     "ou": "OU=Students,DC=schulit,DC=lokal",
     "groups": [
         "Students",
@@ -64,11 +64,60 @@ Antwort (Anmeldung nicht erfolgreich):
     "firstname": null,
     "lastname": null,
     "display_name": null,
-    "external_id": null,
     "ou": null,
     "groups": [ ]
 }
 ```
+
+### Passwort ändern
+
+Mit dieser Funktion ist es möglich, dass der Benutzer das Passwort eigenständig ändert. Voraussetzung ist, dass das alte Passwort bekannt ist.
+
+Anfrage:
+
+```json
+{
+    "action": "change_password",
+    "username": "m.mustermann@example.de",
+    "old_password": "altesPW",
+    "new_password": "neuesPW"
+}
+```
+
+Antwort:
+
+```json
+{
+    "success": true|false,
+    "message": "Information über den Status der Anfrage (Fehlermeldung oder Erfolg)"
+}
+```
+
+### Passwort zurücksetzen
+
+Mit dieser Funktion kann ein Benutzer mit entsprechenden Rechten (s.u.) das Passwort eines Benutzers zurücksetzen.
+
+Anfrage:
+
+```json
+{
+    "action": "reset_password",
+    "username": "m.mustermann@example.de",
+    "new_password": "neuesPW",
+    "admin_username": "resetpw@example.de",
+    "admin_password": "yourSecretPassword"
+}
+```
+
+Antwort:
+
+```json
+{
+    "success": true|false,
+    "message": "Information über den Status der Anfrage (Fehlermeldung oder Erfolg)"
+}
+```
+
 
 # Installation & Konfiguration
 
@@ -79,6 +128,18 @@ Die Installationsdateien findet man unter [Releases](https://github.com/adauth-s
 ## Schritt 2: Active Directory Benutzer erstellen
 
 Damit der Server die Daten aus dem Active Directory auslesen kann, muss ein **normaler** AD-Benutzer angelegt werden (kein Administrator o.ä.). OU und Gruppen-Mitgliedschaften sind egal. 
+
+Möchte man auch Passwörter zurücksetzen können, wird ein Account mit entsprechender Berechtigung benötigt. Das sind u.a.
+auch Domänenadmins, allerdings wird nicht empfohlen, diesen Account zum Zurücksetzen von Passwörtern zu verwenden.
+Stattdessen sollte ein separater **normaler** Benutzer (kein Administrator o.ä.) angelegt werden (dessen 
+Anmeldeinformationen auch an die Lehrkraft verteilt wird, die Passwörter zurücksetzen darf). Anschließend muss diesem 
+Benutzer das Recht zum Zurücksetzen von Passwörtern erteilt werden. Dazu in "Active Directory Benutzer- und Computer" die OU
+auswählen, in der Passwörter zurückgesetzt werden dürfen sollen: 
+
+1. Rechtsklick auf die OU -> Aufgaben -> Objektverwaltung zuweisen
+2. Den Benutzer auswählen, der Passwörter zurücksetzen darf
+3. Aufgabe "Setzt Passwörter zurück und erzwingt Kennwortänderung bei der nächsten Anmeldung"
+4. Bestätigen
 
 ## Schritt 3: TLS-Zertifikat erstellen
 
@@ -142,11 +203,11 @@ Ist dieser Wert auf `true`, so lauscht der Server nur auf IPv6-Anfragen. Ist er 
 
 ### server.port
 
-Legt den Port des Servers fest (Standard: `55117`).
+Legt den Port des Servers fest (Standard: `55117`). Achtung: Unter Windows ist gehört dieser Port zu einer Liste blockierter Ports, die nach dem Update [KB4074588](https://support.microsoft.com/en-us/topic/february-13-2018-kb4074588-os-build-16299-248-b4e2ca66-dd7a-6fd5-a8f3-dc6683d4922b) entanden ist.
 
 ### tls.enabled
 
-Legt fest, ob TLS aktiviert ist (Standard: `false`). Dieser Wert sollte in einem Produktivsystem auf `true` gesetzt sein.
+Legt fest, ob TLS aktiviert ist (Standard: `true`). Dieser Wert sollte in einem Produktivsystem auf `true` gesetzt sein.
 
 ### tls.cert
 
@@ -160,9 +221,13 @@ Passwort für die PFX-Datei.
 
 Hostname des Domänencontrollers.
 
-### ldap.domain
+### ldap.domain_fqdn
 
-Name der Domäne.
+Vollqualifizierter Domänenname
+
+### ldap.domain_netbios
+
+NetBIOS Name der Domäne.
 
 ### ldap.username
 
@@ -172,9 +237,26 @@ Benutzername des AD Benutzers für den AD Auth Server (s.o.).
 
 Passwort des AD Benutzers für den AD Auth Server (s.o.).
 
-### unique_id
+### ldap.ssl
 
-Attributname, in der eine eindeutige ID gespeichert ist. Diese kommt in der Regel aus der Schulverwaltung und wird benötigt, wenn SchulIT Dienste Benutzer und Schüler bzw. Lehrer erkennt. Falls dies nicht benötigt wird, kann der Wert auf `null` gesetzt werden.
+Legt fest, ob LDAP over SSL verwendet werden soll.
+
+### ldap.tls
+
+Legt fest, ob LDAP mit STARTTLS verwendet werden soll (empfohlen). Dies wird benötigt, wenn auch Änderungen von Passwörtern vorgenommen werden sollen.
+
+### ldap.certificate_thumbnail
+
+Fingerabdruck des TLS-Zertifikats für SSL oder STARTTLS-Verbindungen.
+
+### ldap.username_property
+
+* `0`: Der UPN des Benutzers wird als Benutzername verwendet (empfohlen)
+* `1`: Der sAMAccountName des Benutzers wird als Benutzername verwendet
+
+### ldap.allowed_upn_suffixes
+
+Eine Liste von UPN-Suffixen, für die der Server Anmeldungen akzeptiert (optional). Achtung: Diese Option ist (noch) ungetestet.
 
 # Schritt 4: Server konfigurieren
 
@@ -182,7 +264,7 @@ Diehe Abschnitt "Konfigurationsdatei".
 
 # Schritt 5: Dienst aktivieren
 
-Der Dienst kann entweder über die GUI (Startmenü: AD Auth Server > AD Auth Server GUI) aktiviert werden oder händisch unter "Dienste" in Windows.
+Der Dienst kann entweder über die GUI (Startmenü: SchulIT -> Active Directory Authentication Server Configuration Utility) aktiviert werden oder händisch unter "Dienste" in Windows.
 
 # Schritt 6: Port-Weiterleitung einrichten
 
