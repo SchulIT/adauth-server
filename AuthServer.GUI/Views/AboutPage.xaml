@@ -39,7 +39,7 @@
         
         
 
-        <ScrollViewer Grid.Row="7">
+        <ScrollViewer Grid.Row="10">
             <ItemsControl ItemsSource="{Binding Libraries}" Margin="7">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

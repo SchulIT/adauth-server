@@ -14,7 +14,7 @@
         </ui:CommandBar>
 
         <ScrollViewer VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <Grid Margin="7">
+            <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

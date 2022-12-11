@@ -15,7 +15,7 @@
 
         <ScrollViewer VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto"
                       IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
-            <Grid Margin="7">
+            <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

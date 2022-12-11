@@ -22,14 +22,9 @@
             <ui:AppBarButton Icon="Stop" Command="{Binding StopServiceCommand}" Label="Dienst beenden" />
         </ui:CommandBar>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <ScrollViewer VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                <Grid Margin="7">
+        <ScrollViewer VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <GroupBox Header="Status" Margin="10">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="*" />
@@ -52,8 +47,8 @@
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding IsServiceInstalled, Converter={StaticResource BooleanToStringConverter}}" />
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding IsServiceRunning, Converter={StaticResource BooleanToStringConverter}}" />
                 </Grid>
-            </ScrollViewer>
-        </Grid>
+            </GroupBox>
+        </ScrollViewer>
     </DockPanel>
     
    
