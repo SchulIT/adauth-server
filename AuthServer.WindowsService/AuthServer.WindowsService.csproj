@@ -5,14 +5,14 @@
     <UserSecretsId>dotnet-AuthServer.WindowsService-41EE207F-5DD4-40B4-BD68-6AB9CF914783</UserSecretsId>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64</Platforms>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
     <PackageProjectUrl>https://github.com/schulit/adauth-server</PackageProjectUrl>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <Authors>Marcel Marnitz</Authors>
     <Company>SchulIT</Company>
     <Product>Active Directory Authentication Server Windows Service</Product>
-    <Copyright>© 2022 SchulIT</Copyright>
+    <Copyright>© 2023 SchulIT</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
