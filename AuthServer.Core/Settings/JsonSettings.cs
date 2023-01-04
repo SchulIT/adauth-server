@@ -19,6 +19,9 @@ namespace AuthServer.Core.Settings
         {
             var file = GetPath();
 
+            var path = Path.GetDirectoryName(file);
+            Directory.CreateDirectory(path);
+
             if (!File.Exists(file))
             {
                 using (var stream = new StreamWriter(file))
