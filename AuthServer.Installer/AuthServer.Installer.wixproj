@@ -55,7 +55,7 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>CONSOLE_INSTALLLOCATION</RefTargetDir>
       <SourceComponentGroup>ConsoleSourceComponentGroup</SourceComponentGroup>
-      <TargetFrameworkIdentifier>net6.0</TargetFrameworkIdentifier>
+      <TargetFrameworkIdentifier>net7.0-windows</TargetFrameworkIdentifier>
       <Runtime>win-$(Platform)</Runtime>
       <IsDotnetSDKProject>True</IsDotnetSDKProject>
       <HasService>False</HasService>
@@ -69,12 +69,11 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>GUI_INSTALLLOCATION</RefTargetDir>
       <SourceComponentGroup>GuiSourceComponentGroup</SourceComponentGroup>
-      <TargetFrameworkIdentifier>net6.0-windows10.0.18362.0</TargetFrameworkIdentifier>
+      <TargetFrameworkIdentifier>net7.0-windows</TargetFrameworkIdentifier>
       <Runtime>win-$(Platform)</Runtime>
       <IsDotnetSDKProject>True</IsDotnetSDKProject>
       <HasService>False</HasService>
       <SourceDir>GuiSourceDir</SourceDir>
-      <IsGUI>True</IsGUI>
     </ProjectReference>
     <ProjectReference Include="..\AuthServer.WindowsService\AuthServer.WindowsService.csproj">
       <Name>AuthServer.WindowsService</Name>
@@ -84,7 +83,7 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>SERVICE_INSTALLLOCATION</RefTargetDir>
       <SourceComponentGroup>ServiceSourceComponentGroup</SourceComponentGroup>
-      <TargetFrameworkIdentifier>net6.0-windows</TargetFrameworkIdentifier>
+      <TargetFrameworkIdentifier>net7.0-windows</TargetFrameworkIdentifier>
       <Runtime>win-$(Platform)</Runtime>
       <IsDotnetSDKProject>True</IsDotnetSDKProject>
       <HasService>True</HasService>
@@ -118,9 +117,7 @@
       <LinkerBindInputPaths Include="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\$(Configuration)\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" />
     </ItemGroup>
     <HeatDirectory RunAsSeparateProcess="$(RunWixToolsOutOfProc)" DirectoryRefId="%(ProjectReference.RefTargetDir)" OutputFile="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup).wxs" Directory="%(ProjectReference.RootDir)%(ProjectReference.Directory)bin\$(Configuration)\%(ProjectReference.TargetFrameworkIdentifier)\%(ProjectReference.Runtime)\publish" ComponentGroupName="%(ProjectReference.SourceComponentGroup)" ToolPath="$(WixToolPath)" PreprocessorVariable="var.%(ProjectReference.Name).TargetDir" AutogenerateGuids="True" GenerateGuidsNow="True" SuppressCom="True" SuppressRegistry="True" SuppressFragments="True" SuppressRootDirectory="True" Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True'" />
-    <XslTransformation XslInputPath="TransformFileIds.xsl" XmlInputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup).wxs" OutputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" Condition="'%(ProjectReference.IsGUI)' != 'True' And '%(ProjectReference.HasService)' != 'True'" />
-    <XslTransformation XslInputPath="TransformFileIds.GUI.xsl" XmlInputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup).wxs" OutputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" Condition="'%(ProjectReference.IsGUI)' == 'True'" />
-    <XslTransformation XslInputPath="TransformFileIds.Service.xsl" XmlInputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup).wxs" OutputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" Condition="'%(ProjectReference.HasService)' == 'True'" />
+    <XslTransformation XslInputPath="TransformFileIds.xsl" XmlInputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup).wxs" OutputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True'" />
     <XslTransformation XslInputPath="WixService.xsl" XmlInputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" OutputPaths="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_WithService.wxs" Parameters="$(WixServiceParams)" Condition="'%(ProjectReference.HasService)' == 'True'" />
     <ItemGroup>
       <Compile Include="obj\$(Platform)\$(Configuration)\%(ProjectReference.Name)_%(ProjectReference.SourceComponentGroup)_Final.wxs" Condition="'%(ProjectReference.IsDotnetSDKProject)' == 'True' AND '%(ProjectReference.HasService)' == 'False'" />
