@@ -32,7 +32,7 @@ Anfrage:
 
 ```json
 {
-    "action": "auth",
+    "action": "authenticate",
     "username": "m.mustermann@example.de",
     "password": "secret-password"
 }
